@@ -1,10 +1,8 @@
-import $ from 'jquery';
 import THREELib from 'three-js';
 
-class Index {
+class Smoke {
 
   constructor() {
-    console.log('three.js');
 
     this.THREE = THREELib();
     this.camera;
@@ -14,7 +12,6 @@ class Index {
     this.material;
     this.mesh;
     this.clock;
-    // this.animate = this.animate();
 
     this.init();
     this.animate();
@@ -32,12 +29,6 @@ class Index {
       this.camera = new this.THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
       this.camera.position.z = 1000;
       this.scene.add( this.camera );
-
-      this.geometry = new this.THREE.CubeGeometry( 200, 200, 200 );
-      this.material = new this.THREE.MeshLambertMaterial( { color: 0xaa6666, wireframe: false } );
-      this.mesh = new this.THREE.Mesh( this.geometry, this.material );
-      //scene.add( mesh );
-      this.cubeSineDriver = 0;
 
       const textGeo = new this.THREE.PlaneGeometry(300,300);
       this.THREE.ImageUtils.crossOrigin = ''; //Need this to pull in crossdomain images from AWS
@@ -86,14 +77,10 @@ class Index {
 
   render() {
 
-      this.mesh.rotation.x += 0.005;
-      this.mesh.rotation.y += 0.01;
-      this.cubeSineDriver += .01;
-      this.mesh.position.z = 100 + (Math.sin(this.cubeSineDriver) * 500);
       this.renderer.render( this.scene, this.camera );
 
   }
 
 }
 
-new Index();
+new Smoke();

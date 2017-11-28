@@ -5,7 +5,8 @@ module.exports = {
   // エントリーポイントの設定
   entry: {
     vendor: ['jquery','velocity-animate','underscore'],
-    index: path.join(__dirname,'webpack/index.js')
+    smoke: path.join(__dirname,'webpack/smoke.js'),
+    dotAndLine: path.join(__dirname,'webpack/dotAndLine.js')
   },
   // 出力の設定
   output: {
