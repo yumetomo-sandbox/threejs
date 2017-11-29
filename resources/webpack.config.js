@@ -6,7 +6,8 @@ module.exports = {
   entry: {
     vendor: ['jquery','velocity-animate','underscore'],
     smoke: path.join(__dirname,'webpack/smoke.js'),
-    dotAndLine: path.join(__dirname,'webpack/dotAndLine.js')
+    dotAndLine: path.join(__dirname,'webpack/dotAndLine.js'),
+    changeImage: path.join(__dirname,'webpack/changeImage.js')
   },
   // 出力の設定
   output: {

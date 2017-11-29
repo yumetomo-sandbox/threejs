@@ -34,7 +34,7 @@
 /******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
-/******/ 		2: 0
+/******/ 		3: 0
 /******/ 	};
 /******/
 /******/ 	// The require function
@@ -150,7 +150,7 @@
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 70);
+/******/ 	return __webpack_require__(__webpack_require__.s = 76);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -159,7 +159,7 @@
 
 (function( self ){
 
-	var THREE = __webpack_require__(67);
+	var THREE = __webpack_require__(73);
 
 	module.exports = function( addons ){
 
@@ -176,7 +176,7 @@
 				}
 				else if( typeof addon === "string" ){
 
-					__webpack_require__(6)("./" + addon + ".js")(THREE);
+					__webpack_require__(12)("./" + addon + ".js")(THREE);
 
 				}
 				else {
@@ -197,7 +197,12 @@
 
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10457,7 +10462,7 @@ return jQuery;
 
 
 /***/ }),
-/* 2 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.7.0
@@ -11879,7 +11884,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscor
 
 
 /***/ }),
-/* 3 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! VelocityJS.org (1.5.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
@@ -16657,72 +16662,73 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! VelocityJS
 
 
 /***/ }),
-/* 4 */,
-/* 5 */,
-/* 6 */
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./AdaptiveToneMappingPass.js": 7,
-	"./BasicShader.js": 8,
-	"./BleachBypassShader.js": 9,
-	"./BlendShader.js": 10,
-	"./BloomPass.js": 11,
-	"./BokehPass.js": 12,
-	"./BokehShader.js": 13,
-	"./BokehShader2.js": 14,
-	"./BrightnessContrastShader.js": 15,
-	"./CanvasRenderer.js": 16,
-	"./ColorCorrectionShader.js": 17,
-	"./ColorifyShader.js": 18,
-	"./ConvolutionShader.js": 19,
-	"./CopyShader.js": 20,
-	"./DDSLoader.js": 21,
-	"./DOFMipMapShader.js": 22,
-	"./DigitalGlitch.js": 23,
-	"./DotScreenPass.js": 24,
-	"./DotScreenShader.js": 25,
-	"./EdgeShader.js": 26,
-	"./EdgeShader2.js": 27,
-	"./EffectComposer.js": 28,
-	"./FXAAShader.js": 29,
-	"./FilmPass.js": 30,
-	"./FilmShader.js": 31,
-	"./FocusShader.js": 32,
-	"./FresnelShader.js": 33,
-	"./GammaCorrectionShader.js": 34,
-	"./GlitchPass.js": 35,
-	"./HorizontalBlurShader.js": 36,
-	"./HorizontalTiltShiftShader.js": 37,
-	"./HueSaturationShader.js": 38,
-	"./JSONLoader.js": 39,
-	"./KaleidoShader.js": 40,
-	"./LuminosityShader.js": 41,
-	"./MTLLoader.js": 42,
-	"./MarchingCubes.js": 43,
-	"./MaskPass.js": 44,
-	"./MirrorShader.js": 45,
-	"./NormalMapShader.js": 46,
-	"./OBJLoader.js": 47,
-	"./OceanShaders.js": 48,
-	"./OrbitControls.js": 49,
-	"./ParallaxShader.js": 50,
-	"./Projector.js": 51,
-	"./RGBShiftShader.js": 52,
-	"./RenderPass.js": 53,
-	"./SSAOShader.js": 54,
-	"./SVGLoader.js": 55,
-	"./SavePass.js": 56,
-	"./SepiaShader.js": 57,
-	"./ShaderPass.js": 58,
-	"./TechnicolorShader.js": 59,
-	"./TexturePass.js": 60,
-	"./ToneMapShader.js": 61,
-	"./TriangleBlurShader.js": 62,
-	"./UnpackDepthRGBAShader.js": 63,
-	"./VerticalBlurShader.js": 64,
-	"./VerticalTiltShiftShader.js": 65,
-	"./VignetteShader.js": 66
+	"./AdaptiveToneMappingPass.js": 13,
+	"./BasicShader.js": 14,
+	"./BleachBypassShader.js": 15,
+	"./BlendShader.js": 16,
+	"./BloomPass.js": 17,
+	"./BokehPass.js": 18,
+	"./BokehShader.js": 19,
+	"./BokehShader2.js": 20,
+	"./BrightnessContrastShader.js": 21,
+	"./CanvasRenderer.js": 22,
+	"./ColorCorrectionShader.js": 23,
+	"./ColorifyShader.js": 24,
+	"./ConvolutionShader.js": 25,
+	"./CopyShader.js": 26,
+	"./DDSLoader.js": 27,
+	"./DOFMipMapShader.js": 28,
+	"./DigitalGlitch.js": 29,
+	"./DotScreenPass.js": 30,
+	"./DotScreenShader.js": 31,
+	"./EdgeShader.js": 32,
+	"./EdgeShader2.js": 33,
+	"./EffectComposer.js": 34,
+	"./FXAAShader.js": 35,
+	"./FilmPass.js": 36,
+	"./FilmShader.js": 37,
+	"./FocusShader.js": 38,
+	"./FresnelShader.js": 39,
+	"./GammaCorrectionShader.js": 40,
+	"./GlitchPass.js": 41,
+	"./HorizontalBlurShader.js": 42,
+	"./HorizontalTiltShiftShader.js": 43,
+	"./HueSaturationShader.js": 44,
+	"./JSONLoader.js": 45,
+	"./KaleidoShader.js": 46,
+	"./LuminosityShader.js": 47,
+	"./MTLLoader.js": 48,
+	"./MarchingCubes.js": 49,
+	"./MaskPass.js": 50,
+	"./MirrorShader.js": 51,
+	"./NormalMapShader.js": 52,
+	"./OBJLoader.js": 53,
+	"./OceanShaders.js": 54,
+	"./OrbitControls.js": 55,
+	"./ParallaxShader.js": 56,
+	"./Projector.js": 57,
+	"./RGBShiftShader.js": 58,
+	"./RenderPass.js": 59,
+	"./SSAOShader.js": 60,
+	"./SVGLoader.js": 61,
+	"./SavePass.js": 62,
+	"./SepiaShader.js": 63,
+	"./ShaderPass.js": 64,
+	"./TechnicolorShader.js": 65,
+	"./TexturePass.js": 66,
+	"./ToneMapShader.js": 67,
+	"./TriangleBlurShader.js": 68,
+	"./UnpackDepthRGBAShader.js": 69,
+	"./VerticalBlurShader.js": 70,
+	"./VerticalTiltShiftShader.js": 71,
+	"./VignetteShader.js": 72
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -16738,10 +16744,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 6;
+webpackContext.id = 12;
 
 /***/ }),
-/* 7 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17066,7 +17072,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 8 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17106,7 +17112,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 9 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17179,7 +17185,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 10 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17238,7 +17244,7 @@ module.exports = function( THREE ){
 }
 
 /***/ }),
-/* 11 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17363,7 +17369,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 12 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17475,7 +17481,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 13 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17600,7 +17606,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 14 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -17979,7 +17985,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 15 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -18046,7 +18052,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 16 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19169,7 +19175,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 17 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19228,7 +19234,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 18 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19286,7 +19292,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 19 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19396,7 +19402,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 20 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19451,7 +19457,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 21 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19729,7 +19735,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 22 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19796,7 +19802,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 23 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19908,7 +19914,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 24 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -19978,7 +19984,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 25 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20055,7 +20061,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 26 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20157,7 +20163,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 27 */
+/* 33 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20239,7 +20245,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 28 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20386,7 +20392,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 29 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20414,7 +20420,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 30 */
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20485,7 +20491,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 31 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20598,7 +20604,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 32 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20698,7 +20704,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 33 */
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20781,7 +20787,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 34 */
+/* 40 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20840,7 +20846,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 35 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -20962,7 +20968,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 36 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -21033,7 +21039,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 37 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -21107,7 +21113,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 38 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -21185,7 +21191,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 39 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -21749,7 +21755,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 40 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -21818,7 +21824,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 41 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -21877,7 +21883,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 42 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -22303,7 +22309,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 43 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -23369,7 +23375,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 44 */
+/* 50 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -23465,7 +23471,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 45 */
+/* 51 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -23532,7 +23538,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 46 */
+/* 52 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -23594,7 +23600,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 47 */
+/* 53 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -24006,7 +24012,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 48 */
+/* 54 */
 /***/ (function(module, exports) {
 
 ﻿module.exports = function( THREE ){
@@ -24403,7 +24409,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 49 */
+/* 55 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -25449,7 +25455,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 50 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -25642,7 +25648,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 51 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -26572,7 +26578,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 52 */
+/* 58 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -26637,7 +26643,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 53 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -26697,7 +26703,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 54 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -26931,7 +26937,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 55 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -26973,7 +26979,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 56 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27045,7 +27051,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 57 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27108,7 +27114,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 58 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27177,7 +27183,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 59 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27233,7 +27239,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 60 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27289,7 +27295,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 61 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27373,7 +27379,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 62 */
+/* 68 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27460,7 +27466,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 63 */
+/* 69 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27526,7 +27532,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 64 */
+/* 70 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27597,7 +27603,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 65 */
+/* 71 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27671,7 +27677,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 66 */
+/* 72 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -27743,7 +27749,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 67 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;(function( self ){
@@ -69495,7 +69501,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function( self ){
 
 	};
 
-	if( "function" !== "undefined" && __webpack_require__(68) instanceof Function && __webpack_require__(69) != undefined ){
+	if( "function" !== "undefined" && __webpack_require__(74) instanceof Function && __webpack_require__(75) != undefined ){
 
 		!(__WEBPACK_AMD_DEFINE_RESULT__ = function(){
 
@@ -69519,7 +69525,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function( self ){
 })(this || {});
 
 /***/ }),
-/* 68 */
+/* 74 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -69528,7 +69534,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 69 */
+/* 75 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -69537,12 +69543,12 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 70 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(1);
-__webpack_require__(3);
-module.exports = __webpack_require__(2);
+__webpack_require__(6);
+__webpack_require__(8);
+module.exports = __webpack_require__(7);
 
 
 /***/ })

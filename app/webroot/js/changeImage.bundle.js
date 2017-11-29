@@ -1,4 +1,4 @@
-webpackJsonp([0],[
+webpackJsonp([1],[
 /* 0 */,
 /* 1 */
 /***/ (function(module, exports) {
@@ -2280,8 +2280,7 @@ module.exports = g;
 /* 6 */,
 /* 7 */,
 /* 8 */,
-/* 9 */,
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2305,9 +2304,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var DotAndLine = function () {
-  function DotAndLine() {
-    _classCallCheck(this, DotAndLine);
+var ChangeImage = function () {
+  function ChangeImage() {
+    _classCallCheck(this, ChangeImage);
 
     this.THREE = (0, _threeJs2.default)();
     this.camera;
@@ -2343,7 +2342,7 @@ var DotAndLine = function () {
     this.init();
   }
 
-  _createClass(DotAndLine, [{
+  _createClass(ChangeImage, [{
     key: 'init',
     value: function init() {
 
@@ -2493,7 +2492,7 @@ var DotAndLine = function () {
 
             var randomBaseNum = 6000;
             var randomDiff = 3000;
-            var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum - randomDiff * 1.5, Math.random() * randomBaseNum - randomDiff, Math.random() * randomBaseNum - randomDiff / 2);
+            var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum - randomDiff * 1.5, Math.random() * randomBaseNum - randomDiff, Math.random() * randomBaseNum - randomDiff);
 
             _self.imgArray[i] = {
               vertex: new _self.THREE.Vector3((x - imageW / 2) * 1, (y - imageH / 2) * -1, 0)
@@ -2503,6 +2502,7 @@ var DotAndLine = function () {
             };
 
             _self.pGeometry.vertices.push(new _self.THREE.Vector3((x - imageW / 2 - 250) * 1, (y - imageH / 2) * -1, 0));
+            // _self.pGeometry.vertices.push( randomVertex.clone() );
             _self.pGeometry.colors.push(new _self.THREE.Color("rgb(" + r + "," + g + "," + b + ")"));
             i += 1;
           }
@@ -2561,7 +2561,7 @@ var DotAndLine = function () {
 
             var randomBaseNum = 6000;
             var randomDiff = 3000;
-            var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum - randomDiff / 2, Math.random() * randomBaseNum - randomDiff, Math.random() * randomBaseNum - randomDiff / 2);
+            var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum - randomDiff / 2, Math.random() * randomBaseNum - randomDiff, Math.random() * randomBaseNum - randomDiff);
 
             _self.imgArray2[i] = {
               vertex: new _self.THREE.Vector3((x - imageW / 2) * 1, (y - imageH / 2) * -1, 0)
@@ -2589,27 +2589,27 @@ var DotAndLine = function () {
       var _self = this;
       //animate
       for (var i = 0; i < _self.imgArray.length; i++) {
-        _self.pTweenBack[i] = new _tween2.default.Tween(_self.pGeometry.vertices[i]).to({ x: _self.randomArray[i].vertex.x, y: _self.randomArray[i].vertex.y, z: _self.randomArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Quartic.InOut).start();
+        _self.pTweenBack[i] = new _tween2.default.Tween(_self.pGeometry.vertices[i]).delay(500).to({ x: _self.randomArray[i].vertex.x, y: _self.randomArray[i].vertex.y, z: _self.randomArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Cubic.In).start();
 
-        var materialFadeOut = new _tween2.default.Tween(_self.pMaterial).to({ opacity: 0 }, 300);
+        var materialFadeOut = new _tween2.default.Tween(_self.pMaterial).to({ opacity: 0 }, 100);
 
-        var material2FadeIn = new _tween2.default.Tween(_self.pMaterial2).to({ opacity: 1 }, 300);
+        var material2FadeIn = new _tween2.default.Tween(_self.pMaterial2).to({ opacity: 1 }, 100);
 
-        _self.pTweenReverse[i] = new _tween2.default.Tween(_self.pGeometry2.vertices[i]).to({ x: _self.imgArray2[i].vertex.x + 500, y: _self.imgArray2[i].vertex.y, z: _self.imgArray2[i].vertex.z }, 4000).easing(_tween2.default.Easing.Quadratic.Out);
+        _self.pTweenReverse[i] = new _tween2.default.Tween(_self.pGeometry2.vertices[i]).to({ x: _self.imgArray2[i].vertex.x + 500, y: _self.imgArray2[i].vertex.y, z: _self.imgArray2[i].vertex.z }, 4000).easing(_tween2.default.Easing.Quintic.Out);
 
-        _self.pTweenBackReverse[i] = new _tween2.default.Tween(_self.pGeometry2.vertices[i]).to({ x: _self.randomArray2[i].vertex.x, y: _self.randomArray2[i].vertex.y, z: _self.randomArray2[i].vertex.z, alpha: 0 }, 4000).easing(_tween2.default.Easing.Quartic.InOut);
+        _self.pTweenBackReverse[i] = new _tween2.default.Tween(_self.pGeometry2.vertices[i]).delay(500).to({ x: _self.randomArray[i].vertex.x, y: _self.randomArray[i].vertex.y, z: _self.randomArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Cubic.In);
 
-        var material2FadeOut = new _tween2.default.Tween(_self.pMaterial2).to({ opacity: 0 }, 300);
+        var material2FadeOut = new _tween2.default.Tween(_self.pMaterial2).to({ opacity: 0 }, 100);
 
-        var materialFadeIn = new _tween2.default.Tween(_self.pMaterial).to({ opacity: 1 }, 300);
+        var materialFadeIn = new _tween2.default.Tween(_self.pMaterial).to({ opacity: 1 }, 100);
 
-        _self.pTween[i] = new _tween2.default.Tween(_self.pGeometry.vertices[i]).to({ x: _self.imgArray[i].vertex.x - 250, y: _self.imgArray[i].vertex.y, z: _self.imgArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Quadratic.Out);
+        _self.pTween[i] = new _tween2.default.Tween(_self.pGeometry.vertices[i]).to({ x: _self.imgArray[i].vertex.x - 250, y: _self.imgArray[i].vertex.y, z: _self.imgArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Quintic.Out);
 
-        _self.pTweenBack[i].chain(materialFadeOut, material2FadeIn);
-        material2FadeIn.chain(_self.pTweenReverse[i]);
+        _self.pTweenBack[i].chain(materialFadeOut, material2FadeIn, _self.pTweenReverse[i]);
+        // material2FadeIn.chain(_self.pTweenReverse[i]);
         _self.pTweenReverse[i].chain(_self.pTweenBackReverse[i]);
-        _self.pTweenBackReverse[i].chain(material2FadeOut, materialFadeIn);
-        materialFadeIn.chain(_self.pTween[i]);
+        _self.pTweenBackReverse[i].chain(material2FadeOut, materialFadeIn, _self.pTween[i]);
+        // materialFadeIn.chain(_self.pTween[i]);
         _self.pTween[i].chain(_self.pTweenBack[i]);
       }
 
@@ -2618,10 +2618,10 @@ var DotAndLine = function () {
     }
   }]);
 
-  return DotAndLine;
+  return ChangeImage;
 }();
 
-new DotAndLine();
+new ChangeImage();
 
 /***/ })
-],[10]);
+],[9]);
