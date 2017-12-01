@@ -259,12 +259,12 @@ class ChangeImage {
 
               var randomBaseNum = 6000;
               var randomDiff = 3000;
-              var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum -randomDiff/2, Math.random() * randomBaseNum -randomDiff, Math.random() * randomBaseNum -randomDiff);
+              var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum -randomDiff*1.5, Math.random() * randomBaseNum -randomDiff, Math.random() * randomBaseNum -randomDiff);
 
               _self.imgArray2[i] = {
                   vertex: new _self.THREE.Vector3( (x-imageW/2)*1, (y-imageH/2)*-1, 0 )
               };
-              _self.randomArray2[i] = {
+              _self.randomArray[i] = {
                   vertex: randomVertex.clone(),
               };
 
@@ -295,7 +295,8 @@ class ChangeImage {
             .start();
 
         let materialFadeOut = new TWEEN.Tween( _self.pMaterial )
-            .to( { opacity: 0 }, 100 );
+            .delay(30)
+            .to( { opacity: 0 }, 80 );
 
         let material2FadeIn = new TWEEN.Tween( _self.pMaterial2 )
             .to( { opacity: 1 }, 100 );
@@ -310,7 +311,8 @@ class ChangeImage {
             .easing( TWEEN.Easing.Cubic.In );
 
         let material2FadeOut = new TWEEN.Tween( _self.pMaterial2 )
-            .to( { opacity: 0 }, 100 );
+            .delay(30)
+            .to( { opacity: 0 }, 80 );
 
         let materialFadeIn = new TWEEN.Tween( _self.pMaterial )
             .to( { opacity: 1 }, 100 );
@@ -324,10 +326,8 @@ class ChangeImage {
 
 
         _self.pTweenBack[i].chain(materialFadeOut, material2FadeIn, _self.pTweenReverse[i]);
-        // material2FadeIn.chain(_self.pTweenReverse[i]);
         _self.pTweenReverse[i].chain(_self.pTweenBackReverse[i]);
         _self.pTweenBackReverse[i].chain(material2FadeOut, materialFadeIn, _self.pTween[i]);
-        // materialFadeIn.chain(_self.pTween[i]);
         _self.pTween[i].chain(_self.pTweenBack[i]);
 
     }
