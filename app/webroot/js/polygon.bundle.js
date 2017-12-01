@@ -1,4 +1,4 @@
-webpackJsonp([1],[
+webpackJsonp([0],[
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -55202,7 +55202,9 @@ module.exports = g;
 /* 72 */,
 /* 73 */,
 /* 74 */,
-/* 75 */
+/* 75 */,
+/* 76 */,
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -55226,53 +55228,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ChangeImage = function () {
-  function ChangeImage() {
-    _classCallCheck(this, ChangeImage);
+var Polygon = function () {
+  function Polygon() {
+    _classCallCheck(this, Polygon);
 
     this.THREE = (0, _threeJs2.default)();
     this.camera;
     this.scene;
     this.renderer;
-    this.circle;
-
-    // array
-    this.imgArray = [];
-    this.imgArray2 = [];
-    this.randomArray = [];
-    this.randomArray2 = [];
-    this.randomArrayReverse = [];
-
-    // particle
-    this.img1 = new Image();
-    this.img2 = new Image();
-    this.pGeometry = null;
-    this.pGeometry2 = null;
-    this.pMaterial = null;
-    this.pMaterial2 = null;
-    this.pointCloud = null;
-    this.pTween = [];
-    this.pTweenBack = [];
-    this.pTweenReverse = [];
-    this.pTweenBackReverse = [];
-
-    this.isParticleAnimate = false;
-    this.particleFlg = false;
-
-    this.randomFlg = false;
+    this.animateFlg = false;
+    this.q = new this.THREE.Quaternion();
+    this.windowWidth = window.innerWidth;
+    this.windowHeight = window.innerHeight;
 
     this.init();
   }
 
-  _createClass(ChangeImage, [{
+  _createClass(Polygon, [{
     key: 'init',
     value: function init() {
-
-      var windowWidth = window.innerWidth;
-      var windowHeight = window.innerHeight;
       // remderer作成
       this.renderer = new this.THREE.WebGLRenderer({ antialias: true });
-      this.renderer.setSize(windowWidth, windowHeight);
+      this.renderer.setSize(this.windowWidth, this.windowHeight);
       this.renderer.setClearColor(0xffffff, 1.0);
 
       // scene作成
@@ -55288,260 +55265,83 @@ var ChangeImage = function () {
       light.position.set(-1, 0, 1);
       this.scene.add(light);
 
-      var material = new this.THREE.MeshBasicMaterial({ color: 0x000000 });
+      //ジオメトリ（形状）の宣言と生成
+      this.geometry = new this.THREE.Geometry();
 
-      var circleGeometry = new this.THREE.CircleGeometry(150, 500);
-      this.circle = new this.THREE.Mesh(circleGeometry, material);
-      this.circle.position.set(windowWidth, 0, 0);
-      this.scene.add(this.circle);
+      //頂点座標データを追加
+      this.geometry.vertices[0] = new this.THREE.Vector3(0, -75, 0);
+      this.geometry.vertices[1] = new this.THREE.Vector3(90, 80, 0);
+      this.geometry.vertices[2] = new this.THREE.Vector3(-90, 80, 0);
+
+      // this.geometry.vertices[0] = new this.THREE.Vector3(0, -75, 0);
+      // this.geometry.vertices[1] = new this.THREE.Vector3(90, 80, 0);
+      // this.geometry.vertices[2] = new this.THREE.Vector3(-90, 80, 0);
+
+      //面指定用頂点インデックスを追加
+      this.geometry.faces[0] = new this.THREE.Face3(0, 1, 2);
+      console.log(this.windowWidth);
+      //マテリアル（材質）の宣言と生成
+      var material = new this.THREE.MeshBasicMaterial({ color: 0xf09a33, side: this.THREE.DoubleSide });
+      this.Triangle = new this.THREE.Mesh(this.geometry, material);
+      this.Triangle.position.x = 900;
+      this.Triangle.position.y = 900;
+
+      //シーンオブジェクトに追加
+      this.scene.add(this.Triangle);
 
       document.body.appendChild(this.renderer.domElement);
 
-      // this.createParticle();
-      // this.animate();
-      // console.log(this.circle.position.x)
-      this.circleAnimate();
-      this.createParticle();
-    }
-  }, {
-    key: 'circleAnimate',
-    value: function circleAnimate() {
-      var circleAnimationFrame = requestAnimationFrame(this.circleAnimate.bind(this));
-      if (this.circle.position.x <= -window.innerWidth) {
-        cancelAnimationFrame(circleAnimationFrame);
-      } else if (this.circle.position.x <= 0 && !this.isParticleAnimate) {
-        this.isParticleAnimate = true;
-        this.animate();
-      } else {
-        this.circle.position.x -= 20;
-        this.circleRender();
-      }
-    }
-  }, {
-    key: 'circleRender',
-    value: function circleRender() {
-      this.renderer.render(this.scene, this.camera);
-    }
-  }, {
-    key: 'animate',
-    value: function animate() {
-      requestAnimationFrame(this.animate.bind(this));
       this.render();
-
-      _tween2.default.update();
+      this.animate();
     }
   }, {
     key: 'render',
     value: function render() {
-      if (this.particleFlg) {
-        this.pGeometry.verticesNeedUpdate = true;
-        this.pGeometry2.verticesNeedUpdate = true;
+      if (this.animateFlg) {
+        this.geometry.verticesNeedUpdate = true;
+        _tween2.default.update();
+
+        this.Triangle.rotation.x += Math.PI / 40;
+        this.Triangle.rotation.y += Math.PI / 40;
+        console.log(this.Triangle.rotation.x);
       }
       this.renderer.render(this.scene, this.camera);
+      requestAnimationFrame(this.render.bind(this));
     }
   }, {
-    key: 'createParticle',
-    value: function createParticle() {
-      var _this = this;
+    key: 'animate',
+    value: function animate() {
+      console.log(_tween2.default);
+      for (var i = 0; i < this.geometry.vertices.length; i++) {
+        var animation = new _tween2.default.Tween(this.Triangle.position).delay(500).to({ x: 0, y: 0 }, 3000).easing(_tween2.default.Easing.Cubic.In).start();
 
-      // this.img.onload = result => {
-      //   const img = result.path[0];
-      //   Promise.all([this.loadedBeforeImage(img)])
-      //     .then(console.log('test'));
-      // }
-      // this.img.src = './../../webroot/images/shizuku.png';
+        var finish = new _tween2.default.Tween(this.Triangle.rotation).to({ x: 18.8, y: 18.8 }, 300).easing(_tween2.default.Easing.Linear.None);
 
-      var Loader = function Loader(expectedCnt, callback) {
-        var cnt = 0;
-        return function () {
-          if (++cnt == expectedCnt) {
-            callback();
-          }
-        };
-      };
-
-      var loader = Loader(2, function () {
-        _es6Promise2.default.all([_this.loadedBeforeImage(_this.img1), _this.loadedAfterImage(_this.img2)]).then(_this.setTweenAnimate());
-      });
-      this.img1.onload = loader;
-      this.img2.onload = loader;
-      this.img1.src = './../../webroot/images/shizuku.png';
-      this.img2.src = './../../webroot/images/shizuku2.png';
-    }
-  }, {
-    key: 'loadedBeforeImage',
-    value: function loadedBeforeImage(img1) {
-      var _self = this;
-      // canvas
-      var imgCanvas = document.createElement("canvas");
-      if (!imgCanvas.getContext) throw new Error("cannot make canvas");
-
-      imgCanvas.width = img1.width;
-      imgCanvas.height = img1.height;
-
-      var context = imgCanvas.getContext("2d");
-      context.drawImage(img1, 0, 0);
-
-      var imageW = imgCanvas.width;
-      var imageH = imgCanvas.height;
-
-      //data
-      var pixels = context.getImageData(0, 0, imageW, imageH).data;
-      var index = 0;
-      var i = 0;
-
-      //geometry
-      _self.pGeometry = new _self.THREE.Geometry();
-
-      // material
-      _self.pMaterial = new _self.THREE.PointsMaterial({
-        size: 3,
-        sizeAttenuation: false,
-        transparent: true,
-        opacity: 1.0,
-        vertexColors: _self.THREE.VertexColors
-      });
-
-      for (var x = 0; x < imageW; x++) {
-        for (var y = 0; y < imageH; y++) {
-          var r = pixels[index];
-          var g = pixels[index + 1];
-          var b = pixels[index + 2];
-          var a = pixels[index + 3];
-
-          var sum = r + g + b;
-          if (sum > 1) {
-
-            var randomBaseNum = 6000;
-            var randomDiff = 3000;
-            var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum - randomDiff * 1.5, Math.random() * randomBaseNum - randomDiff, Math.random() * randomBaseNum - randomDiff);
-
-            _self.imgArray[i] = {
-              vertex: new _self.THREE.Vector3((x - imageW / 2) * 1, (y - imageH / 2) * -1, 0)
-            };
-            _self.randomArray[i] = {
-              vertex: randomVertex.clone()
-            };
-
-            _self.pGeometry.vertices.push(new _self.THREE.Vector3((x - imageW / 2 - 250) * 1, (y - imageH / 2) * -1, 0));
-            // _self.pGeometry.vertices.push( randomVertex.clone() );
-            _self.pGeometry.colors.push(new _self.THREE.Color("rgb(" + r + "," + g + "," + b + ")"));
-            i += 1;
-          }
-
-          index = x * 4 + y * (4 * imageW);
-        }
+        console.log(animation);
+        animation.chain(finish);
+        finish.onComplete(this.endAnimate.bind(this));
+        // animation.onComplete(this.endAnimate.bind(this));
       }
 
-      // point cloud
-      _self.pointCloud = _self.THREE.PointCloud(_self.pGeometry, _self.pMaterial);
-      _self.scene.add(_self.pointCloud);
+      this.animateFlg = true;
     }
   }, {
-    key: 'loadedAfterImage',
-    value: function loadedAfterImage(img1) {
-      var _self = this;
-      // canvas
-      var imgCanvas = document.createElement("canvas");
-      if (!imgCanvas.getContext) throw new Error("cannot make canvas");
+    key: 'endAnimate',
+    value: function endAnimate() {
+      this.animateFlg = false;
+      // this.Triangle.rotation.z = 0;
+      // this.Triangle.rotation.x = 0;
+      // this.Triangle.rotation.y = 0;
 
-      imgCanvas.width = img1.width;
-      imgCanvas.height = img1.height;
 
-      var context = imgCanvas.getContext("2d");
-      context.drawImage(img1, 0, 0);
-
-      var imageW = imgCanvas.width;
-      var imageH = imgCanvas.height;
-
-      //data
-      var pixels = context.getImageData(0, 0, imageW, imageH).data;
-      var index = 0;
-      var i = 0;
-
-      //geometry
-      _self.pGeometry2 = new _self.THREE.Geometry();
-
-      // material
-      _self.pMaterial2 = new _self.THREE.PointsMaterial({
-        size: 3,
-        sizeAttenuation: false,
-        transparent: true,
-        opacity: 0,
-        vertexColors: _self.THREE.VertexColors
-      });
-
-      for (var x = 0; x < imageW; x++) {
-        for (var y = 0; y < imageH; y++) {
-          var r = pixels[index];
-          var g = pixels[index + 1];
-          var b = pixels[index + 2];
-          var a = pixels[index + 3];
-
-          var sum = r + g + b;
-          if (sum > 1) {
-
-            var randomBaseNum = 6000;
-            var randomDiff = 3000;
-            var randomVertex = new _self.THREE.Vector3(Math.random() * randomBaseNum - randomDiff * 1.5, Math.random() * randomBaseNum - randomDiff, Math.random() * randomBaseNum - randomDiff);
-
-            _self.imgArray2[i] = {
-              vertex: new _self.THREE.Vector3((x - imageW / 2) * 1, (y - imageH / 2) * -1, 0)
-            };
-            _self.randomArray[i] = {
-              vertex: randomVertex.clone()
-            };
-
-            _self.pGeometry2.vertices.push(randomVertex.clone());
-            _self.pGeometry2.colors.push(new _self.THREE.Color("rgb(" + r + "," + g + "," + b + ")"));
-            i += 1;
-          }
-
-          index = x * 4 + y * (4 * imageW);
-        }
-      }
-
-      // point cloud
-      _self.pointCloud = _self.THREE.PointCloud(_self.pGeometry2, _self.pMaterial2);
-      _self.scene.add(_self.pointCloud);
-    }
-  }, {
-    key: 'setTweenAnimate',
-    value: function setTweenAnimate() {
-      var _self = this;
-      //animate
-      for (var i = 0; i < _self.imgArray.length; i++) {
-        _self.pTweenBack[i] = new _tween2.default.Tween(_self.pGeometry.vertices[i]).delay(500).to({ x: _self.randomArray[i].vertex.x, y: _self.randomArray[i].vertex.y, z: _self.randomArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Cubic.In).start();
-
-        var materialFadeOut = new _tween2.default.Tween(_self.pMaterial).delay(30).to({ opacity: 0 }, 80);
-
-        var material2FadeIn = new _tween2.default.Tween(_self.pMaterial2).to({ opacity: 1 }, 100);
-
-        _self.pTweenReverse[i] = new _tween2.default.Tween(_self.pGeometry2.vertices[i]).to({ x: _self.imgArray2[i].vertex.x + 500, y: _self.imgArray2[i].vertex.y, z: _self.imgArray2[i].vertex.z }, 4000).easing(_tween2.default.Easing.Quintic.Out);
-
-        _self.pTweenBackReverse[i] = new _tween2.default.Tween(_self.pGeometry2.vertices[i]).delay(500).to({ x: _self.randomArray[i].vertex.x, y: _self.randomArray[i].vertex.y, z: _self.randomArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Cubic.In);
-
-        var material2FadeOut = new _tween2.default.Tween(_self.pMaterial2).delay(30).to({ opacity: 0 }, 80);
-
-        var materialFadeIn = new _tween2.default.Tween(_self.pMaterial).to({ opacity: 1 }, 100);
-
-        _self.pTween[i] = new _tween2.default.Tween(_self.pGeometry.vertices[i]).to({ x: _self.imgArray[i].vertex.x - 250, y: _self.imgArray[i].vertex.y, z: _self.imgArray[i].vertex.z }, 4000).easing(_tween2.default.Easing.Quintic.Out);
-
-        _self.pTweenBack[i].chain(materialFadeOut, material2FadeIn, _self.pTweenReverse[i]);
-        _self.pTweenReverse[i].chain(_self.pTweenBackReverse[i]);
-        _self.pTweenBackReverse[i].chain(material2FadeOut, materialFadeIn, _self.pTween[i]);
-        _self.pTween[i].chain(_self.pTweenBack[i]);
-      }
-
-      _self.particleFlg = true;
-      return true;
+      console.log('end');
     }
   }]);
 
-  return ChangeImage;
+  return Polygon;
 }();
 
-new ChangeImage();
+new Polygon();
 
 /***/ })
-],[75]);
+],[77]);

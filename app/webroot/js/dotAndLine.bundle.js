@@ -1,29 +1,6 @@
-webpackJsonp([0],{
+webpackJsonp([3],{
 
-/***/ 10:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _circle = __webpack_require__(77);
-
-var _yagasuri = __webpack_require__(78);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var DotAndLine = function DotAndLine() {
-  _classCallCheck(this, DotAndLine);
-
-  this.circle = new _circle.Circle();
-  this.yagasuri = new _yagasuri.Yagasuri();
-};
-
-new DotAndLine();
-
-/***/ }),
-
-/***/ 77:
+/***/ 71:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -36,7 +13,7 @@ exports.Circle = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jquery = __webpack_require__(6);
+var _jquery = __webpack_require__(68);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -107,7 +84,7 @@ var Circle = exports.Circle = function () {
 
 /***/ }),
 
-/***/ 78:
+/***/ 72:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -120,7 +97,7 @@ exports.Yagasuri = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jquery = __webpack_require__(6);
+var _jquery = __webpack_require__(68);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -293,6 +270,29 @@ var Yagasuri = exports.Yagasuri = function () {
   return Yagasuri;
 }();
 
+/***/ }),
+
+/***/ 76:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _circle = __webpack_require__(71);
+
+var _yagasuri = __webpack_require__(72);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DotAndLine = function DotAndLine() {
+  _classCallCheck(this, DotAndLine);
+
+  this.circle = new _circle.Circle();
+  this.yagasuri = new _yagasuri.Yagasuri();
+};
+
+new DotAndLine();
+
 /***/ })
 
-},[10]);
+},[76]);

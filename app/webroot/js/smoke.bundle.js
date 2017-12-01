@@ -4,7 +4,7 @@ webpackJsonp([2],[
 
 (function( self ){
 
-	var THREE = __webpack_require__(73);
+	var THREE = __webpack_require__(63);
 
 	module.exports = function( addons ){
 
@@ -21,7 +21,7 @@ webpackJsonp([2],[
 				}
 				else if( typeof addon === "string" ){
 
-					__webpack_require__(12)("./" + addon + ".js")(THREE);
+					__webpack_require__(2)("./" + addon + ".js")(THREE);
 
 				}
 				else {
@@ -43,184 +43,70 @@ webpackJsonp([2],[
 
 /***/ }),
 /* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _threeJs = __webpack_require__(0);
-
-var _threeJs2 = _interopRequireDefault(_threeJs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Smoke = function () {
-    function Smoke() {
-        _classCallCheck(this, Smoke);
-
-        this.THREE = (0, _threeJs2.default)();
-        this.camera;
-        this.scene;
-        this.renderer;
-        this.geometry;
-        this.material;
-        this.mesh;
-        this.clock;
-
-        this.init();
-        this.animate();
-    }
-
-    _createClass(Smoke, [{
-        key: 'init',
-        value: function init() {
-
-            this.clock = new this.THREE.Clock();
-            this.renderer = new this.THREE.WebGLRenderer();
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-
-            this.scene = new this.THREE.Scene();
-
-            this.camera = new this.THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-            this.camera.position.z = 1000;
-            this.scene.add(this.camera);
-
-            var textGeo = new this.THREE.PlaneGeometry(300, 300);
-            this.THREE.ImageUtils.crossOrigin = ''; //Need this to pull in crossdomain images from AWS
-            var textTexture = this.THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/quickText.png');
-            var textMaterial = new this.THREE.MeshLambertMaterial({ color: 0x00ffff, opacity: 1, map: textTexture, transparent: true, blending: this.THREE.AdditiveBlending });
-            var text = new this.THREE.Mesh(textGeo, textMaterial);
-            text.position.z = 800;
-            this.scene.add(text);
-
-            var light = new this.THREE.DirectionalLight(0xffffff, 0.5);
-            light.position.set(-1, 0, 1);
-            this.scene.add(light);
-
-            var smokeTexture = this.THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/Smoke-Element.png');
-            var smokeMaterial = new this.THREE.MeshLambertMaterial({ color: 0x00dddd, map: smokeTexture, transparent: true });
-            var smokeGeo = new this.THREE.PlaneGeometry(300, 300);
-            this.smokeParticles = [];
-
-            for (var p = 0; p < 150; p++) {
-                var particle = new this.THREE.Mesh(smokeGeo, smokeMaterial);
-                particle.position.set(Math.random() * 500 - 250, Math.random() * 500 - 250, Math.random() * 1000 - 100);
-                particle.rotation.z = Math.random() * 360;
-                this.scene.add(particle);
-                this.smokeParticles.push(particle);
-            }
-
-            document.body.appendChild(this.renderer.domElement);
-        }
-    }, {
-        key: 'animate',
-        value: function animate() {
-            // note: three.js includes requestAnimationFrame shim
-            var delta = this.clock.getDelta();
-            requestAnimationFrame(this.animate.bind(this));
-            this.evolveSmoke(delta);
-            this.render();
-        }
-    }, {
-        key: 'evolveSmoke',
-        value: function evolveSmoke(delta) {
-            var sp = this.smokeParticles.length;
-            while (sp--) {
-                this.smokeParticles[sp].rotation.z += delta * 0.2;
-            }
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-
-            this.renderer.render(this.scene, this.camera);
-        }
-    }]);
-
-    return Smoke;
-}();
-
-new Smoke();
-
-/***/ }),
-/* 12 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./AdaptiveToneMappingPass.js": 13,
-	"./BasicShader.js": 14,
-	"./BleachBypassShader.js": 15,
-	"./BlendShader.js": 16,
-	"./BloomPass.js": 17,
-	"./BokehPass.js": 18,
-	"./BokehShader.js": 19,
-	"./BokehShader2.js": 20,
-	"./BrightnessContrastShader.js": 21,
-	"./CanvasRenderer.js": 22,
-	"./ColorCorrectionShader.js": 23,
-	"./ColorifyShader.js": 24,
-	"./ConvolutionShader.js": 25,
-	"./CopyShader.js": 26,
-	"./DDSLoader.js": 27,
-	"./DOFMipMapShader.js": 28,
-	"./DigitalGlitch.js": 29,
-	"./DotScreenPass.js": 30,
-	"./DotScreenShader.js": 31,
-	"./EdgeShader.js": 32,
-	"./EdgeShader2.js": 33,
-	"./EffectComposer.js": 34,
-	"./FXAAShader.js": 35,
-	"./FilmPass.js": 36,
-	"./FilmShader.js": 37,
-	"./FocusShader.js": 38,
-	"./FresnelShader.js": 39,
-	"./GammaCorrectionShader.js": 40,
-	"./GlitchPass.js": 41,
-	"./HorizontalBlurShader.js": 42,
-	"./HorizontalTiltShiftShader.js": 43,
-	"./HueSaturationShader.js": 44,
-	"./JSONLoader.js": 45,
-	"./KaleidoShader.js": 46,
-	"./LuminosityShader.js": 47,
-	"./MTLLoader.js": 48,
-	"./MarchingCubes.js": 49,
-	"./MaskPass.js": 50,
-	"./MirrorShader.js": 51,
-	"./NormalMapShader.js": 52,
-	"./OBJLoader.js": 53,
-	"./OceanShaders.js": 54,
-	"./OrbitControls.js": 55,
-	"./ParallaxShader.js": 56,
-	"./Projector.js": 57,
-	"./RGBShiftShader.js": 58,
-	"./RenderPass.js": 59,
-	"./SSAOShader.js": 60,
-	"./SVGLoader.js": 61,
-	"./SavePass.js": 62,
-	"./SepiaShader.js": 63,
-	"./ShaderPass.js": 64,
-	"./TechnicolorShader.js": 65,
-	"./TexturePass.js": 66,
-	"./ToneMapShader.js": 67,
-	"./TriangleBlurShader.js": 68,
-	"./UnpackDepthRGBAShader.js": 69,
-	"./VerticalBlurShader.js": 70,
-	"./VerticalTiltShiftShader.js": 71,
-	"./VignetteShader.js": 72
+	"./AdaptiveToneMappingPass.js": 3,
+	"./BasicShader.js": 4,
+	"./BleachBypassShader.js": 5,
+	"./BlendShader.js": 6,
+	"./BloomPass.js": 7,
+	"./BokehPass.js": 8,
+	"./BokehShader.js": 9,
+	"./BokehShader2.js": 10,
+	"./BrightnessContrastShader.js": 11,
+	"./CanvasRenderer.js": 12,
+	"./ColorCorrectionShader.js": 13,
+	"./ColorifyShader.js": 14,
+	"./ConvolutionShader.js": 15,
+	"./CopyShader.js": 16,
+	"./DDSLoader.js": 17,
+	"./DOFMipMapShader.js": 18,
+	"./DigitalGlitch.js": 19,
+	"./DotScreenPass.js": 20,
+	"./DotScreenShader.js": 21,
+	"./EdgeShader.js": 22,
+	"./EdgeShader2.js": 23,
+	"./EffectComposer.js": 24,
+	"./FXAAShader.js": 25,
+	"./FilmPass.js": 26,
+	"./FilmShader.js": 27,
+	"./FocusShader.js": 28,
+	"./FresnelShader.js": 29,
+	"./GammaCorrectionShader.js": 30,
+	"./GlitchPass.js": 31,
+	"./HorizontalBlurShader.js": 32,
+	"./HorizontalTiltShiftShader.js": 33,
+	"./HueSaturationShader.js": 34,
+	"./JSONLoader.js": 35,
+	"./KaleidoShader.js": 36,
+	"./LuminosityShader.js": 37,
+	"./MTLLoader.js": 38,
+	"./MarchingCubes.js": 39,
+	"./MaskPass.js": 40,
+	"./MirrorShader.js": 41,
+	"./NormalMapShader.js": 42,
+	"./OBJLoader.js": 43,
+	"./OceanShaders.js": 44,
+	"./OrbitControls.js": 45,
+	"./ParallaxShader.js": 46,
+	"./Projector.js": 47,
+	"./RGBShiftShader.js": 48,
+	"./RenderPass.js": 49,
+	"./SSAOShader.js": 50,
+	"./SVGLoader.js": 51,
+	"./SavePass.js": 52,
+	"./SepiaShader.js": 53,
+	"./ShaderPass.js": 54,
+	"./TechnicolorShader.js": 55,
+	"./TexturePass.js": 56,
+	"./ToneMapShader.js": 57,
+	"./TriangleBlurShader.js": 58,
+	"./UnpackDepthRGBAShader.js": 59,
+	"./VerticalBlurShader.js": 60,
+	"./VerticalTiltShiftShader.js": 61,
+	"./VignetteShader.js": 62
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -236,10 +122,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 12;
+webpackContext.id = 2;
 
 /***/ }),
-/* 13 */
+/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -564,7 +450,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 14 */
+/* 4 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -604,7 +490,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 15 */
+/* 5 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -677,7 +563,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 16 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -736,7 +622,7 @@ module.exports = function( THREE ){
 }
 
 /***/ }),
-/* 17 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -861,7 +747,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 18 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -973,7 +859,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 19 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -1098,7 +984,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 20 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -1477,7 +1363,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 21 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -1544,7 +1430,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 22 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -2667,7 +2553,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 23 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -2726,7 +2612,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 24 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -2784,7 +2670,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 25 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -2894,7 +2780,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 26 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -2949,7 +2835,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 27 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3227,7 +3113,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 28 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3294,7 +3180,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 29 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3406,7 +3292,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 30 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3476,7 +3362,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 31 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3553,7 +3439,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 32 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3655,7 +3541,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 33 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3737,7 +3623,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 34 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3884,7 +3770,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 35 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3912,7 +3798,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 36 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -3983,7 +3869,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 37 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4096,7 +3982,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 38 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4196,7 +4082,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 39 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4279,7 +4165,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 40 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4338,7 +4224,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 41 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4460,7 +4346,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 42 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4531,7 +4417,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 43 */
+/* 33 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4605,7 +4491,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 44 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -4683,7 +4569,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 45 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -5247,7 +5133,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 46 */
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -5316,7 +5202,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 47 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -5375,7 +5261,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 48 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -5801,7 +5687,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 49 */
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -6867,7 +6753,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 50 */
+/* 40 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -6963,7 +6849,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 51 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -7030,7 +6916,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 52 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -7092,7 +6978,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 53 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -7504,7 +7390,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 54 */
+/* 44 */
 /***/ (function(module, exports) {
 
 ﻿module.exports = function( THREE ){
@@ -7901,7 +7787,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 55 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -8947,7 +8833,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 56 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -9140,7 +9026,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 57 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10070,7 +9956,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 58 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10135,7 +10021,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 59 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10195,7 +10081,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 60 */
+/* 50 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10429,7 +10315,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 61 */
+/* 51 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10471,7 +10357,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 62 */
+/* 52 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10543,7 +10429,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 63 */
+/* 53 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10606,7 +10492,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 64 */
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10675,7 +10561,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 65 */
+/* 55 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10731,7 +10617,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 66 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10787,7 +10673,7 @@ module.exports = function( THREE ){
 };
 
 /***/ }),
-/* 67 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10871,7 +10757,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 68 */
+/* 58 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -10958,7 +10844,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 69 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -11024,7 +10910,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 70 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -11095,7 +10981,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 71 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -11169,7 +11055,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 72 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = function( THREE ){
@@ -11241,7 +11127,7 @@ module.exports = function( THREE ){
 
 
 /***/ }),
-/* 73 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;(function( self ){
@@ -52993,7 +52879,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function( self ){
 
 	};
 
-	if( "function" !== "undefined" && __webpack_require__(74) instanceof Function && __webpack_require__(75) != undefined ){
+	if( "function" !== "undefined" && __webpack_require__(64) instanceof Function && __webpack_require__(65) != undefined ){
 
 		!(__WEBPACK_AMD_DEFINE_RESULT__ = function(){
 
@@ -53017,7 +52903,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;(function( self ){
 })(this || {});
 
 /***/ }),
-/* 74 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -53026,7 +52912,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 75 */
+/* 65 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -53034,5 +52920,122 @@ module.exports = __webpack_amd_options__;
 
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
+/***/ }),
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _threeJs = __webpack_require__(0);
+
+var _threeJs2 = _interopRequireDefault(_threeJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Smoke = function () {
+    function Smoke() {
+        _classCallCheck(this, Smoke);
+
+        this.THREE = (0, _threeJs2.default)();
+        this.camera;
+        this.scene;
+        this.renderer;
+        this.geometry;
+        this.material;
+        this.mesh;
+        this.clock;
+
+        this.init();
+        this.animate();
+    }
+
+    _createClass(Smoke, [{
+        key: 'init',
+        value: function init() {
+
+            this.clock = new this.THREE.Clock();
+            this.renderer = new this.THREE.WebGLRenderer();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+            this.scene = new this.THREE.Scene();
+
+            this.camera = new this.THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+            this.camera.position.z = 1000;
+            this.scene.add(this.camera);
+
+            var textGeo = new this.THREE.PlaneGeometry(300, 300);
+            this.THREE.ImageUtils.crossOrigin = ''; //Need this to pull in crossdomain images from AWS
+            var textTexture = this.THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/quickText.png');
+            var textMaterial = new this.THREE.MeshLambertMaterial({ color: 0x00ffff, opacity: 1, map: textTexture, transparent: true, blending: this.THREE.AdditiveBlending });
+            var text = new this.THREE.Mesh(textGeo, textMaterial);
+            text.position.z = 800;
+            this.scene.add(text);
+
+            var light = new this.THREE.DirectionalLight(0xffffff, 0.5);
+            light.position.set(-1, 0, 1);
+            this.scene.add(light);
+
+            var smokeTexture = this.THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/Smoke-Element.png');
+            var smokeMaterial = new this.THREE.MeshLambertMaterial({ color: 0x00dddd, map: smokeTexture, transparent: true });
+            var smokeGeo = new this.THREE.PlaneGeometry(300, 300);
+            this.smokeParticles = [];
+
+            for (var p = 0; p < 150; p++) {
+                var particle = new this.THREE.Mesh(smokeGeo, smokeMaterial);
+                particle.position.set(Math.random() * 500 - 250, Math.random() * 500 - 250, Math.random() * 1000 - 100);
+                particle.rotation.z = Math.random() * 360;
+                this.scene.add(particle);
+                this.smokeParticles.push(particle);
+            }
+
+            document.body.appendChild(this.renderer.domElement);
+        }
+    }, {
+        key: 'animate',
+        value: function animate() {
+            // note: three.js includes requestAnimationFrame shim
+            var delta = this.clock.getDelta();
+            requestAnimationFrame(this.animate.bind(this));
+            this.evolveSmoke(delta);
+            this.render();
+        }
+    }, {
+        key: 'evolveSmoke',
+        value: function evolveSmoke(delta) {
+            var sp = this.smokeParticles.length;
+            while (sp--) {
+                this.smokeParticles[sp].rotation.z += delta * 0.2;
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+
+            this.renderer.render(this.scene, this.camera);
+        }
+    }]);
+
+    return Smoke;
+}();
+
+new Smoke();
+
 /***/ })
-],[11]);
+],[78]);
