@@ -1,6 +1,6 @@
 webpackJsonp([3],{
 
-/***/ 71:
+/***/ 68:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13,7 +13,7 @@ exports.Circle = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jquery = __webpack_require__(68);
+var _jquery = __webpack_require__(67);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -84,7 +84,7 @@ var Circle = exports.Circle = function () {
 
 /***/ }),
 
-/***/ 72:
+/***/ 69:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -97,7 +97,7 @@ exports.Yagasuri = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jquery = __webpack_require__(68);
+var _jquery = __webpack_require__(67);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -199,6 +199,17 @@ var Yagasuri = exports.Yagasuri = function () {
         this.context.stroke();
       }
     }
+  }, {
+    key: 'reDrawFourthLine',
+    value: function reDrawFourthLine() {
+      for (var i = 0; i < this.upperPositionX.length; i++) {
+        this.context.beginPath();
+        this.context.moveTo(this.upperPositionX[i] + 4, this.positionY + 4);
+        this.context.lineTo(this.upperPositionX[i] + this.total + 4.5, this.positionY + this.total + 4);
+        this.context.closePath();
+        this.context.stroke();
+      }
+    }
 
     //アニメーションの処理
 
@@ -210,8 +221,6 @@ var Yagasuri = exports.Yagasuri = function () {
       //x座標が領域外の場合は最初の位置に戻す
       if (this.total >= 102) {
         this.total = 0;
-        //ここでクリア
-        // this.context.clearRect(0,0, this.context.canvas.width, this.context.canvas.height);
         this.cancelAnimationFrame.call(window, loop);
         this.secondLoop();
       }
@@ -226,8 +235,6 @@ var Yagasuri = exports.Yagasuri = function () {
       //x座標が領域外の場合は最初の位置に戻す
       if (this.total >= 50) {
         this.total = 0;
-        //ここでクリア
-        // this.context.clearRect(0,0, this.context.canvas.width, this.context.canvas.height);
         this.cancelAnimationFrame.call(window, loop);
         this.thirdLoop();
       }
@@ -242,8 +249,6 @@ var Yagasuri = exports.Yagasuri = function () {
       //x座標が領域外の場合は最初の位置に戻す
       if (this.total >= 102) {
         this.total = 0;
-        //ここでクリア
-        // this.context.clearRect(0,0, this.context.canvas.width, this.context.canvas.height);
         this.cancelAnimationFrame.call(window, loop);
         this.fourthLoop();
       }
@@ -258,12 +263,25 @@ var Yagasuri = exports.Yagasuri = function () {
       //x座標が領域外の場合は最初の位置に戻す
       if (this.total >= 50) {
         this.total = 0;
-        //ここでクリア
-        // this.context.clearRect(0,0, this.context.canvas.width, this.context.canvas.height);
         this.cancelAnimationFrame.call(window, loop);
+        this.context.globalCompositeOperation = 'destination-out';
+        this.reFourthLoop();
       }
       //描画処理
       this.drawFourthLine();
+    }
+  }, {
+    key: 'reFourthLoop',
+    value: function reFourthLoop() {
+      var loop = this.requestAnimationFrame.call(window, this.reFourthLoop.bind(this));
+      this.total += 1;
+      //x座標が領域外の場合は最初の位置に戻す
+      if (this.total >= 50) {
+        this.total = 0;
+        this.cancelAnimationFrame.call(window, loop);
+      }
+      //描画処理
+      this.reDrawFourthLine();
     }
   }]);
 
@@ -272,15 +290,15 @@ var Yagasuri = exports.Yagasuri = function () {
 
 /***/ }),
 
-/***/ 76:
+/***/ 74:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _circle = __webpack_require__(71);
+var _circle = __webpack_require__(68);
 
-var _yagasuri = __webpack_require__(72);
+var _yagasuri = __webpack_require__(69);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -295,4 +313,4 @@ new DotAndLine();
 
 /***/ })
 
-},[76]);
+},[74]);
