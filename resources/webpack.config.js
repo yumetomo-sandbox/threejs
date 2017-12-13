@@ -8,7 +8,8 @@ module.exports = {
     smoke: path.join(__dirname,'webpack/smoke.js'),
     dotAndLine: path.join(__dirname,'webpack/dotAndLine.js'),
     changeImage: path.join(__dirname,'webpack/changeImage.js'),
-    polygon: path.join(__dirname,'webpack/polygon.js')
+    polygon: path.join(__dirname,'webpack/polygon.js'),
+    polygon2: path.join(__dirname,'webpack/polygon2.js')
   },
   // 出力の設定
   output: {

@@ -1,4 +1,4 @@
-webpackJsonp([3],[
+webpackJsonp([1],[
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -42,7 +42,896 @@ webpackJsonp([3],[
 
 
 /***/ }),
-/* 1 */,
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * Tween.js - Licensed under the MIT license
+ * https://github.com/tweenjs/tween.js
+ * ----------------------------------------------
+ *
+ * See https://github.com/tweenjs/tween.js/graphs/contributors for the full list of contributors.
+ * Thank you all, you're awesome!
+ */
+
+var TWEEN = TWEEN || (function () {
+
+	var _tweens = [];
+
+	return {
+
+		getAll: function () {
+
+			return _tweens;
+
+		},
+
+		removeAll: function () {
+
+			_tweens = [];
+
+		},
+
+		add: function (tween) {
+
+			_tweens.push(tween);
+
+		},
+
+		remove: function (tween) {
+
+			var i = _tweens.indexOf(tween);
+
+			if (i !== -1) {
+				_tweens.splice(i, 1);
+			}
+
+		},
+
+		update: function (time, preserve) {
+
+			if (_tweens.length === 0) {
+				return false;
+			}
+
+			var i = 0;
+
+			time = time !== undefined ? time : TWEEN.now();
+
+			while (i < _tweens.length) {
+
+				if (_tweens[i].update(time) || preserve) {
+					i++;
+				} else {
+					_tweens.splice(i, 1);
+				}
+
+			}
+
+			return true;
+
+		}
+	};
+
+})();
+
+
+// Include a performance.now polyfill.
+// In node.js, use process.hrtime.
+if (typeof (window) === 'undefined' && typeof (process) !== 'undefined') {
+	TWEEN.now = function () {
+		var time = process.hrtime();
+
+		// Convert [seconds, nanoseconds] to milliseconds.
+		return time[0] * 1000 + time[1] / 1000000;
+	};
+}
+// In a browser, use window.performance.now if it is available.
+else if (typeof (window) !== 'undefined' &&
+         window.performance !== undefined &&
+		 window.performance.now !== undefined) {
+	// This must be bound, because directly assigning this function
+	// leads to an invocation exception in Chrome.
+	TWEEN.now = window.performance.now.bind(window.performance);
+}
+// Use Date.now if it is available.
+else if (Date.now !== undefined) {
+	TWEEN.now = Date.now;
+}
+// Otherwise, use 'new Date().getTime()'.
+else {
+	TWEEN.now = function () {
+		return new Date().getTime();
+	};
+}
+
+
+TWEEN.Tween = function (object) {
+
+	var _object = object;
+	var _valuesStart = {};
+	var _valuesEnd = {};
+	var _valuesStartRepeat = {};
+	var _duration = 1000;
+	var _repeat = 0;
+	var _repeatDelayTime;
+	var _yoyo = false;
+	var _isPlaying = false;
+	var _reversed = false;
+	var _delayTime = 0;
+	var _startTime = null;
+	var _easingFunction = TWEEN.Easing.Linear.None;
+	var _interpolationFunction = TWEEN.Interpolation.Linear;
+	var _chainedTweens = [];
+	var _onStartCallback = null;
+	var _onStartCallbackFired = false;
+	var _onUpdateCallback = null;
+	var _onCompleteCallback = null;
+	var _onStopCallback = null;
+
+	this.to = function (properties, duration) {
+
+		_valuesEnd = properties;
+
+		if (duration !== undefined) {
+			_duration = duration;
+		}
+
+		return this;
+
+	};
+
+	this.start = function (time) {
+
+		TWEEN.add(this);
+
+		_isPlaying = true;
+
+		_onStartCallbackFired = false;
+
+		_startTime = time !== undefined ? time : TWEEN.now();
+		_startTime += _delayTime;
+
+		for (var property in _valuesEnd) {
+
+			// Check if an Array was provided as property value
+			if (_valuesEnd[property] instanceof Array) {
+
+				if (_valuesEnd[property].length === 0) {
+					continue;
+				}
+
+				// Create a local copy of the Array with the start value at the front
+				_valuesEnd[property] = [_object[property]].concat(_valuesEnd[property]);
+
+			}
+
+			// If `to()` specifies a property that doesn't exist in the source object,
+			// we should not set that property in the object
+			if (_object[property] === undefined) {
+				continue;
+			}
+
+			// Save the starting value.
+			_valuesStart[property] = _object[property];
+
+			if ((_valuesStart[property] instanceof Array) === false) {
+				_valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
+			}
+
+			_valuesStartRepeat[property] = _valuesStart[property] || 0;
+
+		}
+
+		return this;
+
+	};
+
+	this.stop = function () {
+
+		if (!_isPlaying) {
+			return this;
+		}
+
+		TWEEN.remove(this);
+		_isPlaying = false;
+
+		if (_onStopCallback !== null) {
+			_onStopCallback.call(_object, _object);
+		}
+
+		this.stopChainedTweens();
+		return this;
+
+	};
+
+	this.end = function () {
+
+		this.update(_startTime + _duration);
+		return this;
+
+	};
+
+	this.stopChainedTweens = function () {
+
+		for (var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++) {
+			_chainedTweens[i].stop();
+		}
+
+	};
+
+	this.delay = function (amount) {
+
+		_delayTime = amount;
+		return this;
+
+	};
+
+	this.repeat = function (times) {
+
+		_repeat = times;
+		return this;
+
+	};
+
+	this.repeatDelay = function (amount) {
+
+		_repeatDelayTime = amount;
+		return this;
+
+	};
+
+	this.yoyo = function (yoyo) {
+
+		_yoyo = yoyo;
+		return this;
+
+	};
+
+
+	this.easing = function (easing) {
+
+		_easingFunction = easing;
+		return this;
+
+	};
+
+	this.interpolation = function (interpolation) {
+
+		_interpolationFunction = interpolation;
+		return this;
+
+	};
+
+	this.chain = function () {
+
+		_chainedTweens = arguments;
+		return this;
+
+	};
+
+	this.onStart = function (callback) {
+
+		_onStartCallback = callback;
+		return this;
+
+	};
+
+	this.onUpdate = function (callback) {
+
+		_onUpdateCallback = callback;
+		return this;
+
+	};
+
+	this.onComplete = function (callback) {
+
+		_onCompleteCallback = callback;
+		return this;
+
+	};
+
+	this.onStop = function (callback) {
+
+		_onStopCallback = callback;
+		return this;
+
+	};
+
+	this.update = function (time) {
+
+		var property;
+		var elapsed;
+		var value;
+
+		if (time < _startTime) {
+			return true;
+		}
+
+		if (_onStartCallbackFired === false) {
+
+			if (_onStartCallback !== null) {
+				_onStartCallback.call(_object, _object);
+			}
+
+			_onStartCallbackFired = true;
+		}
+
+		elapsed = (time - _startTime) / _duration;
+		elapsed = elapsed > 1 ? 1 : elapsed;
+
+		value = _easingFunction(elapsed);
+
+		for (property in _valuesEnd) {
+
+			// Don't update properties that do not exist in the source object
+			if (_valuesStart[property] === undefined) {
+				continue;
+			}
+
+			var start = _valuesStart[property] || 0;
+			var end = _valuesEnd[property];
+
+			if (end instanceof Array) {
+
+				_object[property] = _interpolationFunction(end, value);
+
+			} else {
+
+				// Parses relative end values with start as base (e.g.: +10, -3)
+				if (typeof (end) === 'string') {
+
+					if (end.charAt(0) === '+' || end.charAt(0) === '-') {
+						end = start + parseFloat(end);
+					} else {
+						end = parseFloat(end);
+					}
+				}
+
+				// Protect against non numeric properties.
+				if (typeof (end) === 'number') {
+					_object[property] = start + (end - start) * value;
+				}
+
+			}
+
+		}
+
+		if (_onUpdateCallback !== null) {
+			_onUpdateCallback.call(_object, value);
+		}
+
+		if (elapsed === 1) {
+
+			if (_repeat > 0) {
+
+				if (isFinite(_repeat)) {
+					_repeat--;
+				}
+
+				// Reassign starting values, restart by making startTime = now
+				for (property in _valuesStartRepeat) {
+
+					if (typeof (_valuesEnd[property]) === 'string') {
+						_valuesStartRepeat[property] = _valuesStartRepeat[property] + parseFloat(_valuesEnd[property]);
+					}
+
+					if (_yoyo) {
+						var tmp = _valuesStartRepeat[property];
+
+						_valuesStartRepeat[property] = _valuesEnd[property];
+						_valuesEnd[property] = tmp;
+					}
+
+					_valuesStart[property] = _valuesStartRepeat[property];
+
+				}
+
+				if (_yoyo) {
+					_reversed = !_reversed;
+				}
+
+				if (_repeatDelayTime !== undefined) {
+					_startTime = time + _repeatDelayTime;
+				} else {
+					_startTime = time + _delayTime;
+				}
+
+				return true;
+
+			} else {
+
+				if (_onCompleteCallback !== null) {
+
+					_onCompleteCallback.call(_object, _object);
+				}
+
+				for (var i = 0, numChainedTweens = _chainedTweens.length; i < numChainedTweens; i++) {
+					// Make the chained tweens start exactly at the time they should,
+					// even if the `update()` method was called way past the duration of the tween
+					_chainedTweens[i].start(_startTime + _duration);
+				}
+
+				return false;
+
+			}
+
+		}
+
+		return true;
+
+	};
+
+};
+
+
+TWEEN.Easing = {
+
+	Linear: {
+
+		None: function (k) {
+
+			return k;
+
+		}
+
+	},
+
+	Quadratic: {
+
+		In: function (k) {
+
+			return k * k;
+
+		},
+
+		Out: function (k) {
+
+			return k * (2 - k);
+
+		},
+
+		InOut: function (k) {
+
+			if ((k *= 2) < 1) {
+				return 0.5 * k * k;
+			}
+
+			return - 0.5 * (--k * (k - 2) - 1);
+
+		}
+
+	},
+
+	Cubic: {
+
+		In: function (k) {
+
+			return k * k * k;
+
+		},
+
+		Out: function (k) {
+
+			return --k * k * k + 1;
+
+		},
+
+		InOut: function (k) {
+
+			if ((k *= 2) < 1) {
+				return 0.5 * k * k * k;
+			}
+
+			return 0.5 * ((k -= 2) * k * k + 2);
+
+		}
+
+	},
+
+	Quartic: {
+
+		In: function (k) {
+
+			return k * k * k * k;
+
+		},
+
+		Out: function (k) {
+
+			return 1 - (--k * k * k * k);
+
+		},
+
+		InOut: function (k) {
+
+			if ((k *= 2) < 1) {
+				return 0.5 * k * k * k * k;
+			}
+
+			return - 0.5 * ((k -= 2) * k * k * k - 2);
+
+		}
+
+	},
+
+	Quintic: {
+
+		In: function (k) {
+
+			return k * k * k * k * k;
+
+		},
+
+		Out: function (k) {
+
+			return --k * k * k * k * k + 1;
+
+		},
+
+		InOut: function (k) {
+
+			if ((k *= 2) < 1) {
+				return 0.5 * k * k * k * k * k;
+			}
+
+			return 0.5 * ((k -= 2) * k * k * k * k + 2);
+
+		}
+
+	},
+
+	Sinusoidal: {
+
+		In: function (k) {
+
+			return 1 - Math.cos(k * Math.PI / 2);
+
+		},
+
+		Out: function (k) {
+
+			return Math.sin(k * Math.PI / 2);
+
+		},
+
+		InOut: function (k) {
+
+			return 0.5 * (1 - Math.cos(Math.PI * k));
+
+		}
+
+	},
+
+	Exponential: {
+
+		In: function (k) {
+
+			return k === 0 ? 0 : Math.pow(1024, k - 1);
+
+		},
+
+		Out: function (k) {
+
+			return k === 1 ? 1 : 1 - Math.pow(2, - 10 * k);
+
+		},
+
+		InOut: function (k) {
+
+			if (k === 0) {
+				return 0;
+			}
+
+			if (k === 1) {
+				return 1;
+			}
+
+			if ((k *= 2) < 1) {
+				return 0.5 * Math.pow(1024, k - 1);
+			}
+
+			return 0.5 * (- Math.pow(2, - 10 * (k - 1)) + 2);
+
+		}
+
+	},
+
+	Circular: {
+
+		In: function (k) {
+
+			return 1 - Math.sqrt(1 - k * k);
+
+		},
+
+		Out: function (k) {
+
+			return Math.sqrt(1 - (--k * k));
+
+		},
+
+		InOut: function (k) {
+
+			if ((k *= 2) < 1) {
+				return - 0.5 * (Math.sqrt(1 - k * k) - 1);
+			}
+
+			return 0.5 * (Math.sqrt(1 - (k -= 2) * k) + 1);
+
+		}
+
+	},
+
+	Elastic: {
+
+		In: function (k) {
+
+			if (k === 0) {
+				return 0;
+			}
+
+			if (k === 1) {
+				return 1;
+			}
+
+			return -Math.pow(2, 10 * (k - 1)) * Math.sin((k - 1.1) * 5 * Math.PI);
+
+		},
+
+		Out: function (k) {
+
+			if (k === 0) {
+				return 0;
+			}
+
+			if (k === 1) {
+				return 1;
+			}
+
+			return Math.pow(2, -10 * k) * Math.sin((k - 0.1) * 5 * Math.PI) + 1;
+
+		},
+
+		InOut: function (k) {
+
+			if (k === 0) {
+				return 0;
+			}
+
+			if (k === 1) {
+				return 1;
+			}
+
+			k *= 2;
+
+			if (k < 1) {
+				return -0.5 * Math.pow(2, 10 * (k - 1)) * Math.sin((k - 1.1) * 5 * Math.PI);
+			}
+
+			return 0.5 * Math.pow(2, -10 * (k - 1)) * Math.sin((k - 1.1) * 5 * Math.PI) + 1;
+
+		}
+
+	},
+
+	Back: {
+
+		In: function (k) {
+
+			var s = 1.70158;
+
+			return k * k * ((s + 1) * k - s);
+
+		},
+
+		Out: function (k) {
+
+			var s = 1.70158;
+
+			return --k * k * ((s + 1) * k + s) + 1;
+
+		},
+
+		InOut: function (k) {
+
+			var s = 1.70158 * 1.525;
+
+			if ((k *= 2) < 1) {
+				return 0.5 * (k * k * ((s + 1) * k - s));
+			}
+
+			return 0.5 * ((k -= 2) * k * ((s + 1) * k + s) + 2);
+
+		}
+
+	},
+
+	Bounce: {
+
+		In: function (k) {
+
+			return 1 - TWEEN.Easing.Bounce.Out(1 - k);
+
+		},
+
+		Out: function (k) {
+
+			if (k < (1 / 2.75)) {
+				return 7.5625 * k * k;
+			} else if (k < (2 / 2.75)) {
+				return 7.5625 * (k -= (1.5 / 2.75)) * k + 0.75;
+			} else if (k < (2.5 / 2.75)) {
+				return 7.5625 * (k -= (2.25 / 2.75)) * k + 0.9375;
+			} else {
+				return 7.5625 * (k -= (2.625 / 2.75)) * k + 0.984375;
+			}
+
+		},
+
+		InOut: function (k) {
+
+			if (k < 0.5) {
+				return TWEEN.Easing.Bounce.In(k * 2) * 0.5;
+			}
+
+			return TWEEN.Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5;
+
+		}
+
+	}
+
+};
+
+TWEEN.Interpolation = {
+
+	Linear: function (v, k) {
+
+		var m = v.length - 1;
+		var f = m * k;
+		var i = Math.floor(f);
+		var fn = TWEEN.Interpolation.Utils.Linear;
+
+		if (k < 0) {
+			return fn(v[0], v[1], f);
+		}
+
+		if (k > 1) {
+			return fn(v[m], v[m - 1], m - f);
+		}
+
+		return fn(v[i], v[i + 1 > m ? m : i + 1], f - i);
+
+	},
+
+	Bezier: function (v, k) {
+
+		var b = 0;
+		var n = v.length - 1;
+		var pw = Math.pow;
+		var bn = TWEEN.Interpolation.Utils.Bernstein;
+
+		for (var i = 0; i <= n; i++) {
+			b += pw(1 - k, n - i) * pw(k, i) * v[i] * bn(n, i);
+		}
+
+		return b;
+
+	},
+
+	CatmullRom: function (v, k) {
+
+		var m = v.length - 1;
+		var f = m * k;
+		var i = Math.floor(f);
+		var fn = TWEEN.Interpolation.Utils.CatmullRom;
+
+		if (v[0] === v[m]) {
+
+			if (k < 0) {
+				i = Math.floor(f = m * (1 + k));
+			}
+
+			return fn(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);
+
+		} else {
+
+			if (k < 0) {
+				return v[0] - (fn(v[0], v[0], v[1], v[1], -f) - v[0]);
+			}
+
+			if (k > 1) {
+				return v[m] - (fn(v[m], v[m], v[m - 1], v[m - 1], f - m) - v[m]);
+			}
+
+			return fn(v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2], f - i);
+
+		}
+
+	},
+
+	Utils: {
+
+		Linear: function (p0, p1, t) {
+
+			return (p1 - p0) * t + p0;
+
+		},
+
+		Bernstein: function (n, i) {
+
+			var fc = TWEEN.Interpolation.Utils.Factorial;
+
+			return fc(n) / fc(i) / fc(n - i);
+
+		},
+
+		Factorial: (function () {
+
+			var a = [1];
+
+			return function (n) {
+
+				var s = 1;
+
+				if (a[n]) {
+					return a[n];
+				}
+
+				for (var i = n; i > 1; i--) {
+					s *= i;
+				}
+
+				a[n] = s;
+				return s;
+
+			};
+
+		})(),
+
+		CatmullRom: function (p0, p1, p2, p3, t) {
+
+			var v0 = (p2 - p0) * 0.5;
+			var v1 = (p3 - p1) * 0.5;
+			var t2 = t * t;
+			var t3 = t * t2;
+
+			return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (- 3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1;
+
+		}
+
+	}
+
+};
+
+// UMD (Universal Module Definition)
+(function (root) {
+
+	if (true) {
+
+		// AMD
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+			return TWEEN;
+		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+	} else if (typeof module !== 'undefined' && typeof exports === 'object') {
+
+		// Node.js
+		module.exports = TWEEN;
+
+	} else if (root !== undefined) {
+
+		// Global variable
+		root.TWEEN = TWEEN;
+
+	}
+
+})(this);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(66)))
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -52921,7 +53810,196 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 66 */,
+/* 66 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
 /* 67 */,
 /* 68 */,
 /* 69 */,
@@ -52931,8 +54009,7 @@ module.exports = __webpack_amd_options__;
 /* 73 */,
 /* 74 */,
 /* 75 */,
-/* 76 */,
-/* 77 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52944,97 +54021,703 @@ var _threeJs = __webpack_require__(0);
 
 var _threeJs2 = _interopRequireDefault(_threeJs);
 
+var _tween = __webpack_require__(1);
+
+var _tween2 = _interopRequireDefault(_tween);
+
+var _jquery = __webpack_require__(67);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Smoke = function () {
-    function Smoke() {
-        _classCallCheck(this, Smoke);
+var Polygon = function () {
+    function Polygon() {
+        var _this = this;
+
+        _classCallCheck(this, Polygon);
 
         this.THREE = (0, _threeJs2.default)();
         this.camera;
         this.scene;
         this.renderer;
-        this.geometry;
-        this.material;
-        this.mesh;
-        this.clock;
+        this.animateFlg = false;
+        this.q = new this.THREE.Quaternion();
+        this.windowWidth = window.innerWidth;
+        this.windowHeight = window.innerHeight;
 
         this.init();
-        this.animate();
+
+        (0, _jquery2.default)(window).on('resize', function () {
+            _this.windowWidth = window.innerWidth;
+            _this.windowHeight = window.innerHeight;
+            var widthRatio = _this.windowWidth / 1600;
+            var heightRatio = _this.windowHeight / 900;
+            var ratio = Math.min(widthRatio, heightRatio);
+            (0, _jquery2.default)('#frame').css('transform', 'scale(' + ratio + ')');
+        });
     }
 
-    _createClass(Smoke, [{
+    _createClass(Polygon, [{
         key: 'init',
         value: function init() {
+            // remderer作成
+            this.renderer = new this.THREE.WebGLRenderer({ alpha: true, antialias: true });
+            this.renderer.setSize(1600, 900);
+            this.renderer.setClearColor(new this.THREE.Color(0xffffff), 0.0);
 
-            this.clock = new this.THREE.Clock();
-            this.renderer = new this.THREE.WebGLRenderer();
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-
+            var widthRatio = this.windowWidth / 1600;
+            var heightRatio = this.windowHeight / 900;
+            var ratio = Math.min(widthRatio, heightRatio);
+            (0, _jquery2.default)('#frame').css('transform', 'scale(' + ratio + ')');
+            // scene作成
             this.scene = new this.THREE.Scene();
 
-            this.camera = new this.THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+            // camera作成
+            this.camera = new this.THREE.PerspectiveCamera(84, 1600 / 900, -10, 100);
             this.camera.position.z = 1000;
             this.scene.add(this.camera);
 
-            var textGeo = new this.THREE.PlaneGeometry(300, 300);
-            this.THREE.ImageUtils.crossOrigin = ''; //Need this to pull in crossdomain images from AWS
-            var textTexture = this.THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/quickText.png');
-            var textMaterial = new this.THREE.MeshLambertMaterial({ color: 0x00ffff, opacity: 1, map: textTexture, transparent: true, blending: this.THREE.AdditiveBlending });
-            var text = new this.THREE.Mesh(textGeo, textMaterial);
-            text.position.z = 800;
-            this.scene.add(text);
-
+            // light作成
             var light = new this.THREE.DirectionalLight(0xffffff, 0.5);
             light.position.set(-1, 0, 1);
             this.scene.add(light);
 
-            var smokeTexture = this.THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/Smoke-Element.png');
-            var smokeMaterial = new this.THREE.MeshLambertMaterial({ color: 0x00dddd, map: smokeTexture, transparent: true });
-            var smokeGeo = new this.THREE.PlaneGeometry(300, 300);
-            this.smokeParticles = [];
+            //ジオメトリ（形状）の宣言と生成
+            this.geometry = new this.THREE.Geometry();
+            this.geometry2 = new this.THREE.Geometry();
+            this.geometry3 = new this.THREE.Geometry();
+            this.geometry4 = new this.THREE.Geometry();
+            this.geometry5 = new this.THREE.Geometry();
+            this.geometry6 = new this.THREE.Geometry();
+            this.geometry7 = new this.THREE.Geometry();
+            this.geometry8 = new this.THREE.Geometry();
+            this.geometry9 = new this.THREE.Geometry();
+            this.geometry10 = new this.THREE.Geometry();
+            this.geometry11 = new this.THREE.Geometry();
+            this.geometry12 = new this.THREE.Geometry();
+            this.geometry13 = new this.THREE.Geometry();
+            this.geometry14 = new this.THREE.Geometry();
+            this.geometry15 = new this.THREE.Geometry();
+            this.geometry16 = new this.THREE.Geometry();
+            this.geometry17 = new this.THREE.Geometry();
+            this.geometry18 = new this.THREE.Geometry();
+            this.geometry19 = new this.THREE.Geometry();
+            this.geometry20 = new this.THREE.Geometry();
+            this.geometry21 = new this.THREE.Geometry();
+            this.geometry22 = new this.THREE.Geometry();
+            this.geometry23 = new this.THREE.Geometry();
+            this.geometry24 = new this.THREE.Geometry();
+            this.geometry25 = new this.THREE.Geometry();
+            this.geometry26 = new this.THREE.Geometry();
+            this.geometry27 = new this.THREE.Geometry();
+            this.geometry28 = new this.THREE.Geometry();
+            this.geometry29 = new this.THREE.Geometry();
+            this.geometry30 = new this.THREE.Geometry();
+            this.geometry31 = new this.THREE.Geometry();
+            this.geometry32 = new this.THREE.Geometry();
+            this.geometry33 = new this.THREE.Geometry();
+            this.geometry34 = new this.THREE.Geometry();
+            this.geometry35 = new this.THREE.Geometry();
+            this.geometry36 = new this.THREE.Geometry();
+            this.geometry37 = new this.THREE.Geometry();
+            this.geometry38 = new this.THREE.Geometry();
+            this.geometry39 = new this.THREE.Geometry();
+            this.geometry40 = new this.THREE.Geometry();
+            this.geometry41 = new this.THREE.Geometry();
+            this.geometry42 = new this.THREE.Geometry();
+            this.geometry43 = new this.THREE.Geometry();
+            this.geometry44 = new this.THREE.Geometry();
+            this.geometry45 = new this.THREE.Geometry();
+            this.geometry46 = new this.THREE.Geometry();
+            this.geometry47 = new this.THREE.Geometry();
+            this.geometry48 = new this.THREE.Geometry();
+            this.geometry49 = new this.THREE.Geometry();
+            this.geometry50 = new this.THREE.Geometry();
+            this.geometry51 = new this.THREE.Geometry();
+            this.geometry52 = new this.THREE.Geometry();
+            this.geometry53 = new this.THREE.Geometry();
+            this.geometry54 = new this.THREE.Geometry();
+            this.geometry55 = new this.THREE.Geometry();
+            this.geometry56 = new this.THREE.Geometry();
+            this.geometry57 = new this.THREE.Geometry();
+            this.geometry58 = new this.THREE.Geometry();
+            this.geometry59 = new this.THREE.Geometry();
 
-            for (var p = 0; p < 150; p++) {
-                var particle = new this.THREE.Mesh(smokeGeo, smokeMaterial);
-                particle.position.set(Math.random() * 500 - 250, Math.random() * 500 - 250, Math.random() * 1000 - 100);
-                particle.rotation.z = Math.random() * 360;
-                this.scene.add(particle);
-                this.smokeParticles.push(particle);
-            }
+            //頂点座標データを追加
 
-            document.body.appendChild(this.renderer.domElement);
-        }
-    }, {
-        key: 'animate',
-        value: function animate() {
-            // note: three.js includes requestAnimationFrame shim
-            var delta = this.clock.getDelta();
-            requestAnimationFrame(this.animate.bind(this));
-            this.evolveSmoke(delta);
+            // this.geometry.vertices[0] = new this.THREE.Vector3(-0, 0, 0);
+            // this.geometry.vertices[1] = new this.THREE.Vector3(-0, 0, 0);
+            // this.geometry.vertices[2] = new this.THREE.Vector3(-0, 0, 0);
+
+            this.geometry.vertices[0] = new this.THREE.Vector3(-1400, 950, 10);
+            this.geometry.vertices[1] = new this.THREE.Vector3(-1630, 700, 10);
+            this.geometry.vertices[2] = new this.THREE.Vector3(-1490, 660, 10);
+
+            this.geometry2.vertices[0] = new this.THREE.Vector3(-1490, 660, 10);
+            this.geometry2.vertices[1] = new this.THREE.Vector3(-1440, 820, 10);
+            this.geometry2.vertices[2] = new this.THREE.Vector3(-1140, 420, 10);
+
+            this.geometry3.vertices[0] = new this.THREE.Vector3(-1490, 660, 10);
+            this.geometry3.vertices[1] = new this.THREE.Vector3(-1730, 570, 10);
+            this.geometry3.vertices[2] = new this.THREE.Vector3(-1396, 391, 10);
+
+            this.geometry4.vertices[0] = new this.THREE.Vector3(-1396, 391, 10);
+            this.geometry4.vertices[1] = new this.THREE.Vector3(-1140, 420, 10);
+            this.geometry4.vertices[2] = new this.THREE.Vector3(-1328, 549, 10);
+
+            this.geometry5.vertices[0] = new this.THREE.Vector3(-1140, 420, 10);
+            this.geometry5.vertices[1] = new this.THREE.Vector3(-1020, 310, 10);
+            this.geometry5.vertices[2] = new this.THREE.Vector3(-910, 450, 10);
+
+            this.geometry6.vertices[0] = new this.THREE.Vector3(-910, 450, 10);
+            this.geometry6.vertices[1] = new this.THREE.Vector3(-990, 44, 10);
+            this.geometry6.vertices[2] = new this.THREE.Vector3(-868, 126, 10);
+
+            this.geometry7.vertices[0] = new this.THREE.Vector3(-910, 450, 10);
+            this.geometry7.vertices[1] = new this.THREE.Vector3(-848, 250, 10);
+            this.geometry7.vertices[2] = new this.THREE.Vector3(-850, 425, 10);
+
+            this.geometry8.vertices[0] = new this.THREE.Vector3(-848, 250, 10);
+            this.geometry8.vertices[1] = new this.THREE.Vector3(-868, 126, 10);
+            this.geometry8.vertices[2] = new this.THREE.Vector3(-800, 190, 10);
+
+            this.geometry9.vertices[0] = new this.THREE.Vector3(-868, 126, 10);
+            this.geometry9.vertices[1] = new this.THREE.Vector3(-800, 190, 10);
+            this.geometry9.vertices[2] = new this.THREE.Vector3(-806, -20, 10);
+
+            this.geometry10.vertices[0] = new this.THREE.Vector3(-910, 450, 10);
+            this.geometry10.vertices[1] = new this.THREE.Vector3(-810, 409, 10);
+            this.geometry10.vertices[2] = new this.THREE.Vector3(-734, 408, 10);
+
+            this.geometry11.vertices[0] = new this.THREE.Vector3(-850, 425, 10);
+            this.geometry11.vertices[1] = new this.THREE.Vector3(-810, 409, 10);
+            this.geometry11.vertices[2] = new this.THREE.Vector3(-814, 350, 10);
+
+            this.geometry12.vertices[0] = new this.THREE.Vector3(-810, 409, 10);
+            this.geometry12.vertices[1] = new this.THREE.Vector3(-814, 350, 10);
+            this.geometry12.vertices[2] = new this.THREE.Vector3(-734, 408, 10);
+
+            this.geometry13.vertices[0] = new this.THREE.Vector3(-734, 408, 10);
+            this.geometry13.vertices[1] = new this.THREE.Vector3(-680, 392, 10);
+            this.geometry13.vertices[2] = new this.THREE.Vector3(-620, 410, 10);
+
+            this.geometry14.vertices[0] = new this.THREE.Vector3(-680, 392, 10);
+            this.geometry14.vertices[1] = new this.THREE.Vector3(-694, 332, 10);
+            this.geometry14.vertices[2] = new this.THREE.Vector3(-620, 366, 10);
+
+            this.geometry15.vertices[0] = new this.THREE.Vector3(-620, 410, 10);
+            this.geometry15.vertices[1] = new this.THREE.Vector3(-680, 392, 10);
+            this.geometry15.vertices[2] = new this.THREE.Vector3(-530, 410, 10);
+
+            this.geometry16.vertices[0] = new this.THREE.Vector3(-530, 410, 10);
+            this.geometry16.vertices[1] = new this.THREE.Vector3(-508, 365, 10);
+            this.geometry16.vertices[2] = new this.THREE.Vector3(-360, 406, 10);
+
+            this.geometry17.vertices[0] = new this.THREE.Vector3(-360, 406, 10);
+            this.geometry17.vertices[1] = new this.THREE.Vector3(-430, 387, 10);
+            this.geometry17.vertices[2] = new this.THREE.Vector3(-270, 385, 10);
+
+            this.geometry18.vertices[0] = new this.THREE.Vector3(-430, 387, 10);
+            this.geometry18.vertices[1] = new this.THREE.Vector3(-270, 385, 10);
+            this.geometry18.vertices[2] = new this.THREE.Vector3(-294, 375, 10);
+
+            this.geometry19.vertices[0] = new this.THREE.Vector3(-270, 385, 10);
+            this.geometry19.vertices[1] = new this.THREE.Vector3(-294, 375, 10);
+            this.geometry19.vertices[2] = new this.THREE.Vector3(-240, 336, 10);
+
+            this.geometry20.vertices[0] = new this.THREE.Vector3(-700, 176, 0);
+            this.geometry20.vertices[1] = new this.THREE.Vector3(-676, 108, 0);
+            this.geometry20.vertices[2] = new this.THREE.Vector3(-578, 110, 0);
+
+            this.geometry21.vertices[0] = new this.THREE.Vector3(-676, 108, 0);
+            this.geometry21.vertices[1] = new this.THREE.Vector3(-578, 110, 0);
+            this.geometry21.vertices[2] = new this.THREE.Vector3(-559, -28, 0);
+
+            this.geometry22.vertices[0] = new this.THREE.Vector3(-559, -28, 0);
+            this.geometry22.vertices[1] = new this.THREE.Vector3(-570, 50, 0);
+            this.geometry22.vertices[2] = new this.THREE.Vector3(-467, 37, 0);
+
+            this.geometry23.vertices[0] = new this.THREE.Vector3(-559, -28, 0);
+            this.geometry23.vertices[1] = new this.THREE.Vector3(-467, 37, 0);
+            this.geometry23.vertices[2] = new this.THREE.Vector3(-406, -47, 0);
+
+            this.geometry24.vertices[0] = new this.THREE.Vector3(-406, -47, 0);
+            this.geometry24.vertices[1] = new this.THREE.Vector3(-306, 10, 0);
+            this.geometry24.vertices[2] = new this.THREE.Vector3(-300, -40, 0);
+
+            this.geometry25.vertices[0] = new this.THREE.Vector3(-306, 10, 0);
+            this.geometry25.vertices[1] = new this.THREE.Vector3(-300, -40, 0);
+            this.geometry25.vertices[2] = new this.THREE.Vector3(-244, -112, 0);
+
+            this.geometry26.vertices[0] = new this.THREE.Vector3(-306, 10, 0);
+            this.geometry26.vertices[1] = new this.THREE.Vector3(-260, -80, 0);
+            this.geometry26.vertices[2] = new this.THREE.Vector3(-198, -44, 0);
+
+            this.geometry27.vertices[0] = new this.THREE.Vector3(-198, -44, 0);
+            this.geometry27.vertices[1] = new this.THREE.Vector3(-82, 8, 0);
+            this.geometry27.vertices[2] = new this.THREE.Vector3(-56, -82, 0);
+
+            this.geometry28.vertices[0] = new this.THREE.Vector3(-82, 8, 0);
+            this.geometry28.vertices[1] = new this.THREE.Vector3(-56, -82, 0);
+            this.geometry28.vertices[2] = new this.THREE.Vector3(46, 80, 0);
+
+            this.geometry29.vertices[0] = new this.THREE.Vector3(-56, -82, 0);
+            this.geometry29.vertices[1] = new this.THREE.Vector3(-22, -86, 0);
+            this.geometry29.vertices[2] = new this.THREE.Vector3(-40, -195, 0);
+
+            this.geometry30.vertices[0] = new this.THREE.Vector3(-56, -82, 0);
+            this.geometry30.vertices[1] = new this.THREE.Vector3(46, 80, 0);
+            this.geometry30.vertices[2] = new this.THREE.Vector3(60, 6, 0);
+
+            this.geometry31.vertices[0] = new this.THREE.Vector3(46, 80, 0);
+            this.geometry31.vertices[1] = new this.THREE.Vector3(82, 45, 0);
+            this.geometry31.vertices[2] = new this.THREE.Vector3(124, 70, 0);
+
+            this.geometry32.vertices[0] = new this.THREE.Vector3(124, 70, 0);
+            this.geometry32.vertices[1] = new this.THREE.Vector3(82, 45, 0);
+            this.geometry32.vertices[2] = new this.THREE.Vector3(142, -6, 0);
+
+            this.geometry33.vertices[0] = new this.THREE.Vector3(124, 70, 0);
+            this.geometry33.vertices[1] = new this.THREE.Vector3(142, -6, 0);
+            this.geometry33.vertices[2] = new this.THREE.Vector3(190, 72, 0);
+
+            this.geometry34.vertices[0] = new this.THREE.Vector3(190, 72, 0);
+            this.geometry34.vertices[1] = new this.THREE.Vector3(340, 172, 0);
+            this.geometry34.vertices[2] = new this.THREE.Vector3(338, 97, 0);
+
+            this.geometry35.vertices[0] = new this.THREE.Vector3(338, 97, 0);
+            this.geometry35.vertices[1] = new this.THREE.Vector3(374, 100, 0);
+            this.geometry35.vertices[2] = new this.THREE.Vector3(368, 16, 0);
+
+            this.geometry36.vertices[0] = new this.THREE.Vector3(368, 16, 0);
+            this.geometry36.vertices[1] = new this.THREE.Vector3(373, 76, 0);
+            this.geometry36.vertices[2] = new this.THREE.Vector3(470, 50, 0);
+
+            this.geometry37.vertices[0] = new this.THREE.Vector3(470, 50, 0);
+            this.geometry37.vertices[1] = new this.THREE.Vector3(432, -52, 0);
+            this.geometry37.vertices[2] = new this.THREE.Vector3(622, -49, 0);
+
+            this.geometry38.vertices[0] = new this.THREE.Vector3(622, -49, 0);
+            this.geometry38.vertices[1] = new this.THREE.Vector3(520, -52, 0);
+            this.geometry38.vertices[2] = new this.THREE.Vector3(617, -165, 0);
+
+            this.geometry39.vertices[0] = new this.THREE.Vector3(617, -165, 0);
+            this.geometry39.vertices[1] = new this.THREE.Vector3(1110, 25, 0);
+            this.geometry39.vertices[2] = new this.THREE.Vector3(1092, -264, 0);
+
+            this.geometry40.vertices[0] = new this.THREE.Vector3(617, -165, 0);
+            this.geometry40.vertices[1] = new this.THREE.Vector3(1092, -264, 0);
+            this.geometry40.vertices[2] = new this.THREE.Vector3(990, -363, 0);
+
+            this.geometry41.vertices[0] = new this.THREE.Vector3(990, -363, 0);
+            this.geometry41.vertices[1] = new this.THREE.Vector3(640, -396, 0);
+            this.geometry41.vertices[2] = new this.THREE.Vector3(814, -442, 0);
+
+            this.geometry42.vertices[0] = new this.THREE.Vector3(990, -363, 0);
+            this.geometry42.vertices[1] = new this.THREE.Vector3(1018, -508, 0);
+            this.geometry42.vertices[2] = new this.THREE.Vector3(1032, -432, 0);
+
+            this.geometry43.vertices[0] = new this.THREE.Vector3(990, -363, 0);
+            this.geometry43.vertices[1] = new this.THREE.Vector3(1404, -570, 0);
+            this.geometry43.vertices[2] = new this.THREE.Vector3(1420, -358, 0);
+
+            this.geometry44.vertices[0] = new this.THREE.Vector3(990, -363, 0);
+            this.geometry44.vertices[1] = new this.THREE.Vector3(1420, -358, 0);
+            this.geometry44.vertices[2] = new this.THREE.Vector3(1078, -336, 0);
+
+            this.geometry45.vertices[0] = new this.THREE.Vector3(1078, -336, 0);
+            this.geometry45.vertices[1] = new this.THREE.Vector3(1420, -358, 0);
+            this.geometry45.vertices[2] = new this.THREE.Vector3(1092, -264, 0);
+
+            this.geometry46.vertices[0] = new this.THREE.Vector3(1092, -264, 0);
+            this.geometry46.vertices[1] = new this.THREE.Vector3(1420, -358, 0);
+            this.geometry46.vertices[2] = new this.THREE.Vector3(1670, -220, 0);
+
+            this.geometry47.vertices[0] = new this.THREE.Vector3(1420, -358, 0);
+            this.geometry47.vertices[1] = new this.THREE.Vector3(1404, -570, 0);
+            this.geometry47.vertices[2] = new this.THREE.Vector3(1540, -564, 0);
+
+            this.geometry48.vertices[0] = new this.THREE.Vector3(1404, -570, 0);
+            this.geometry48.vertices[1] = new this.THREE.Vector3(1400, -729, 0);
+            this.geometry48.vertices[2] = new this.THREE.Vector3(1470, -596, 0);
+
+            this.geometry49.vertices[0] = new this.THREE.Vector3(1470, -596, 0);
+            this.geometry49.vertices[1] = new this.THREE.Vector3(1540, -564, 0);
+            this.geometry49.vertices[2] = new this.THREE.Vector3(1500, -765, 0);
+
+            this.geometry50.vertices[0] = new this.THREE.Vector3(1470, -596, 0);
+            this.geometry50.vertices[1] = new this.THREE.Vector3(1400, -729, 0);
+            this.geometry50.vertices[2] = new this.THREE.Vector3(1500, -765, 0);
+
+            this.geometry51.vertices[0] = new this.THREE.Vector3(1500, -765, 0);
+            this.geometry51.vertices[1] = new this.THREE.Vector3(1583, -730, 0);
+            this.geometry51.vertices[2] = new this.THREE.Vector3(1800, -850, 0);
+
+            this.geometry52.vertices[0] = new this.THREE.Vector3(1583, -730, 0);
+            this.geometry52.vertices[1] = new this.THREE.Vector3(1540, -564, 0);
+            this.geometry52.vertices[2] = new this.THREE.Vector3(1630, -432, 0);
+
+            this.geometry53.vertices[0] = new this.THREE.Vector3(1420, -358, 0);
+            this.geometry53.vertices[1] = new this.THREE.Vector3(1540, -564, 0);
+            this.geometry53.vertices[2] = new this.THREE.Vector3(1525, -435, 0);
+
+            this.geometry54.vertices[0] = new this.THREE.Vector3(1420, -358, 0);
+            this.geometry54.vertices[1] = new this.THREE.Vector3(1525, -435, 0);
+            this.geometry54.vertices[2] = new this.THREE.Vector3(1670, -220, 0);
+
+            this.geometry55.vertices[0] = new this.THREE.Vector3(1525, -435, 0);
+            this.geometry55.vertices[1] = new this.THREE.Vector3(1625, -435, 0);
+            this.geometry55.vertices[2] = new this.THREE.Vector3(1625, -364, 0);
+
+            this.geometry56.vertices[0] = new this.THREE.Vector3(-1070, -160, 0);
+            this.geometry56.vertices[1] = new this.THREE.Vector3(-1650, -100, 0);
+            this.geometry56.vertices[2] = new this.THREE.Vector3(-1630, 430, 0);
+
+            this.geometry57.vertices[0] = new this.THREE.Vector3(1420, -358, 0);
+            this.geometry57.vertices[1] = new this.THREE.Vector3(1404, -570, 0);
+            this.geometry57.vertices[2] = new this.THREE.Vector3(1540, -564, 0);
+
+            this.geometry58.vertices[0] = new this.THREE.Vector3(1404, -570, 0);
+            this.geometry58.vertices[1] = new this.THREE.Vector3(1400, -729, 0);
+            this.geometry58.vertices[2] = new this.THREE.Vector3(1470, -596, 0);
+
+            this.geometry59.vertices[0] = new this.THREE.Vector3(1470, -596, 0);
+            this.geometry59.vertices[1] = new this.THREE.Vector3(1540, -564, 0);
+            this.geometry59.vertices[2] = new this.THREE.Vector3(1500, -765, 0);
+
+            //面指定用頂点インデックスを追加
+            this.geometry.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry2.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry3.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry4.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry5.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry6.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry7.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry8.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry9.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry10.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry11.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry12.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry13.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry14.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry15.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry16.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry17.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry18.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry19.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry20.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry21.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry22.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry23.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry24.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry25.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry26.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry27.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry28.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry29.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry30.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry31.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry32.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry33.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry34.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry35.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry36.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry37.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry38.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry39.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry40.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry41.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry42.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry43.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry44.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry45.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry46.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry47.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry48.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry49.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry50.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry51.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry52.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry53.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry54.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry55.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry56.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry57.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry58.faces[0] = new this.THREE.Face3(0, 1, 2);
+            this.geometry59.faces[0] = new this.THREE.Face3(0, 1, 2);
+
+            //マテリアル（材質）の宣言と生成
+            var material = new this.THREE.MeshBasicMaterial({ color: 0x000000, side: this.THREE.DoubleSide, wireframe: true });
+            var material2 = new this.THREE.MeshBasicMaterial({ color: 0xefefef, side: this.THREE.DoubleSide, transparent: true, opacity: 0.8 });
+            // var material3 =  new this.THREE.MeshBasicMaterial({ color: 0xecaa39, side: this.THREE.DoubleSide });
+            // var material4 =  new this.THREE.MeshBasicMaterial({ color: 0xb04f2e, side: this.THREE.DoubleSide });
+            // var material5 =  new this.THREE.MeshBasicMaterial({ color: 0xf8d466, side: this.THREE.DoubleSide });
+            // var material6 =  new this.THREE.MeshBasicMaterial({ color: 0xf09a33, side: this.THREE.DoubleSide });
+            // var material7 =  new this.THREE.MeshBasicMaterial({ color: 0xf0bf59, side: this.THREE.DoubleSide });
+            // var material8 =  new this.THREE.MeshBasicMaterial({ color: 0x794434, side: this.THREE.DoubleSide });
+            // var material9 =  new this.THREE.MeshBasicMaterial({ color: 0xb04f2e, side: this.THREE.DoubleSide });
+            // var material10 =  new this.THREE.MeshBasicMaterial({ color: 0x794434, side: this.THREE.DoubleSide });
+
+            this.Triangle = new this.THREE.Mesh(this.geometry, material);
+            this.Triangle2 = new this.THREE.Mesh(this.geometry2, material);
+            this.Triangle3 = new this.THREE.Mesh(this.geometry3, material);
+            this.Triangle4 = new this.THREE.Mesh(this.geometry4, material);
+            this.Triangle5 = new this.THREE.Mesh(this.geometry5, material);
+            this.Triangle6 = new this.THREE.Mesh(this.geometry6, material);
+            this.Triangle7 = new this.THREE.Mesh(this.geometry7, material);
+            this.Triangle8 = new this.THREE.Mesh(this.geometry8, material);
+            this.Triangle9 = new this.THREE.Mesh(this.geometry9, material);
+            this.Triangle10 = new this.THREE.Mesh(this.geometry10, material);
+            this.Triangle11 = new this.THREE.Mesh(this.geometry11, material);
+            this.Triangle12 = new this.THREE.Mesh(this.geometry12, material);
+            this.Triangle13 = new this.THREE.Mesh(this.geometry13, material);
+            this.Triangle14 = new this.THREE.Mesh(this.geometry14, material);
+            this.Triangle15 = new this.THREE.Mesh(this.geometry15, material);
+            this.Triangle16 = new this.THREE.Mesh(this.geometry16, material);
+            this.Triangle17 = new this.THREE.Mesh(this.geometry17, material);
+            this.Triangle18 = new this.THREE.Mesh(this.geometry18, material);
+            this.Triangle19 = new this.THREE.Mesh(this.geometry19, material);
+            this.Triangle20 = new this.THREE.Mesh(this.geometry20, material);
+            this.Triangle21 = new this.THREE.Mesh(this.geometry21, material);
+            this.Triangle22 = new this.THREE.Mesh(this.geometry22, material);
+            this.Triangle23 = new this.THREE.Mesh(this.geometry23, material);
+            this.Triangle24 = new this.THREE.Mesh(this.geometry24, material);
+            this.Triangle25 = new this.THREE.Mesh(this.geometry25, material);
+            this.Triangle26 = new this.THREE.Mesh(this.geometry26, material);
+            this.Triangle27 = new this.THREE.Mesh(this.geometry27, material);
+            this.Triangle28 = new this.THREE.Mesh(this.geometry28, material);
+            this.Triangle29 = new this.THREE.Mesh(this.geometry29, material);
+            this.Triangle30 = new this.THREE.Mesh(this.geometry30, material);
+            this.Triangle31 = new this.THREE.Mesh(this.geometry31, material);
+            this.Triangle32 = new this.THREE.Mesh(this.geometry32, material);
+            this.Triangle33 = new this.THREE.Mesh(this.geometry33, material);
+            this.Triangle34 = new this.THREE.Mesh(this.geometry34, material);
+            this.Triangle35 = new this.THREE.Mesh(this.geometry35, material);
+            this.Triangle36 = new this.THREE.Mesh(this.geometry36, material);
+            this.Triangle37 = new this.THREE.Mesh(this.geometry37, material);
+            this.Triangle38 = new this.THREE.Mesh(this.geometry38, material);
+            this.Triangle39 = new this.THREE.Mesh(this.geometry39, material);
+            this.Triangle40 = new this.THREE.Mesh(this.geometry40, material);
+            this.Triangle41 = new this.THREE.Mesh(this.geometry41, material);
+            this.Triangle42 = new this.THREE.Mesh(this.geometry42, material);
+            this.Triangle43 = new this.THREE.Mesh(this.geometry43, material);
+            this.Triangle44 = new this.THREE.Mesh(this.geometry44, material);
+            this.Triangle45 = new this.THREE.Mesh(this.geometry45, material);
+            this.Triangle46 = new this.THREE.Mesh(this.geometry46, material);
+            this.Triangle47 = new this.THREE.Mesh(this.geometry47, material);
+            this.Triangle48 = new this.THREE.Mesh(this.geometry48, material);
+            this.Triangle49 = new this.THREE.Mesh(this.geometry49, material);
+            this.Triangle50 = new this.THREE.Mesh(this.geometry50, material);
+            this.Triangle51 = new this.THREE.Mesh(this.geometry51, material);
+            this.Triangle52 = new this.THREE.Mesh(this.geometry52, material);
+            this.Triangle53 = new this.THREE.Mesh(this.geometry53, material);
+            this.Triangle54 = new this.THREE.Mesh(this.geometry54, material);
+            this.Triangle55 = new this.THREE.Mesh(this.geometry55, material);
+            this.Triangle56 = new this.THREE.Mesh(this.geometry56, material2);
+            this.Triangle57 = new this.THREE.Mesh(this.geometry57, material);
+            this.Triangle58 = new this.THREE.Mesh(this.geometry58, material);
+            this.Triangle59 = new this.THREE.Mesh(this.geometry59, material);
+
+            //シーンオブジェクトに追加
+            this.scene.add(this.Triangle, this.Triangle2, this.Triangle3, this.Triangle4, this.Triangle5, this.Triangle6, this.Triangle7, this.Triangle8, this.Triangle9, this.Triangle10, this.Triangle11, this.Triangle12, this.Triangle13, this.Triangle14, this.Triangle15, this.Triangle16, this.Triangle17, this.Triangle18, this.Triangle19, this.Triangle20, this.Triangle21, this.Triangle22, this.Triangle23, this.Triangle24, this.Triangle25, this.Triangle26, this.Triangle27, this.Triangle28, this.Triangle29, this.Triangle30, this.Triangle31, this.Triangle32, this.Triangle33, this.Triangle34, this.Triangle35, this.Triangle36, this.Triangle37, this.Triangle38, this.Triangle39, this.Triangle40, this.Triangle41, this.Triangle42, this.Triangle43, this.Triangle44, this.Triangle45, this.Triangle46, this.Triangle47, this.Triangle48, this.Triangle49, this.Triangle50, this.Triangle51, this.Triangle52, this.Triangle53, this.Triangle54, this.Triangle55, this.Triangle56, this.Triangle57, this.Triangle58, this.Triangle59);
+            console.log(this.Triangle56.position);
+            (0, _jquery2.default)('#frame').append(this.renderer.domElement);
+
             this.render();
-        }
-    }, {
-        key: 'evolveSmoke',
-        value: function evolveSmoke(delta) {
-            var sp = this.smokeParticles.length;
-            while (sp--) {
-                this.smokeParticles[sp].rotation.z += delta * 0.2;
-            }
+            this.animate();
         }
     }, {
         key: 'render',
         value: function render() {
+            if (this.animateFlg) {
+                this.geometry.verticesNeedUpdate = true;
+                this.geometry2.verticesNeedUpdate = true;
+                this.geometry3.verticesNeedUpdate = true;
+                this.geometry4.verticesNeedUpdate = true;
+                this.geometry5.verticesNeedUpdate = true;
+                this.geometry6.verticesNeedUpdate = true;
+                this.geometry7.verticesNeedUpdate = true;
+                this.geometry8.verticesNeedUpdate = true;
+                this.geometry9.verticesNeedUpdate = true;
+                this.geometry10.verticesNeedUpdate = true;
+                this.geometry11.verticesNeedUpdate = true;
+                this.geometry12.verticesNeedUpdate = true;
+                this.geometry13.verticesNeedUpdate = true;
+                this.geometry14.verticesNeedUpdate = true;
+                this.geometry15.verticesNeedUpdate = true;
+                this.geometry16.verticesNeedUpdate = true;
+                this.geometry17.verticesNeedUpdate = true;
+                this.geometry18.verticesNeedUpdate = true;
+                this.geometry19.verticesNeedUpdate = true;
+                this.geometry20.verticesNeedUpdate = true;
+                this.geometry21.verticesNeedUpdate = true;
+                this.geometry22.verticesNeedUpdate = true;
+                this.geometry23.verticesNeedUpdate = true;
+                this.geometry24.verticesNeedUpdate = true;
+                this.geometry25.verticesNeedUpdate = true;
+                this.geometry26.verticesNeedUpdate = true;
+                this.geometry27.verticesNeedUpdate = true;
+                this.geometry28.verticesNeedUpdate = true;
+                this.geometry29.verticesNeedUpdate = true;
+                this.geometry30.verticesNeedUpdate = true;
+                this.geometry31.verticesNeedUpdate = true;
+                this.geometry32.verticesNeedUpdate = true;
+                this.geometry33.verticesNeedUpdate = true;
+                this.geometry34.verticesNeedUpdate = true;
+                this.geometry35.verticesNeedUpdate = true;
+                this.geometry36.verticesNeedUpdate = true;
+                this.geometry37.verticesNeedUpdate = true;
+                this.geometry38.verticesNeedUpdate = true;
+                this.geometry39.verticesNeedUpdate = true;
+                this.geometry40.verticesNeedUpdate = true;
+                this.geometry41.verticesNeedUpdate = true;
+                this.geometry42.verticesNeedUpdate = true;
+                this.geometry43.verticesNeedUpdate = true;
+                this.geometry44.verticesNeedUpdate = true;
+                this.geometry45.verticesNeedUpdate = true;
+                this.geometry46.verticesNeedUpdate = true;
+                this.geometry47.verticesNeedUpdate = true;
+                this.geometry48.verticesNeedUpdate = true;
+                this.geometry49.verticesNeedUpdate = true;
+                this.geometry50.verticesNeedUpdate = true;
+                this.geometry51.verticesNeedUpdate = true;
+                this.geometry52.verticesNeedUpdate = true;
+                this.geometry53.verticesNeedUpdate = true;
+                this.geometry54.verticesNeedUpdate = true;
+                this.geometry55.verticesNeedUpdate = true;
+                this.geometry56.verticesNeedUpdate = true;
+                this.geometry57.verticesNeedUpdate = true;
+                this.geometry58.verticesNeedUpdate = true;
+                this.geometry59.verticesNeedUpdate = true;
 
+                _tween2.default.update();
+            }
             this.renderer.render(this.scene, this.camera);
+            requestAnimationFrame(this.render.bind(this));
+        }
+    }, {
+        key: 'animate',
+        value: function animate() {
+
+            var apexUp = [];
+            var apexDown = [];
+            var apexExtend = [];
+            var apexShrink = [];
+            apexUp[0] = new _tween2.default.Tween(this.Triangle.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[1] = new _tween2.default.Tween(this.Triangle2.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[2] = new _tween2.default.Tween(this.Triangle3.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[3] = new _tween2.default.Tween(this.Triangle4.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[4] = new _tween2.default.Tween(this.Triangle5.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[5] = new _tween2.default.Tween(this.Triangle6.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[6] = new _tween2.default.Tween(this.Triangle7.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[7] = new _tween2.default.Tween(this.Triangle8.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[8] = new _tween2.default.Tween(this.Triangle9.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[9] = new _tween2.default.Tween(this.Triangle10.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[10] = new _tween2.default.Tween(this.Triangle11.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[11] = new _tween2.default.Tween(this.Triangle12.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[12] = new _tween2.default.Tween(this.Triangle13.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[13] = new _tween2.default.Tween(this.Triangle14.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[14] = new _tween2.default.Tween(this.Triangle15.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[15] = new _tween2.default.Tween(this.Triangle16.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[16] = new _tween2.default.Tween(this.Triangle17.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[17] = new _tween2.default.Tween(this.Triangle18.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[18] = new _tween2.default.Tween(this.Triangle19.position).to({ y: 30 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexUp[19] = new _tween2.default.Tween(this.Triangle56.position).to({ y: 200, x: 50 }, 10000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexDown[0] = new _tween2.default.Tween(this.Triangle.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[1] = new _tween2.default.Tween(this.Triangle2.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[2] = new _tween2.default.Tween(this.Triangle3.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[3] = new _tween2.default.Tween(this.Triangle4.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[4] = new _tween2.default.Tween(this.Triangle5.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[5] = new _tween2.default.Tween(this.Triangle6.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[6] = new _tween2.default.Tween(this.Triangle7.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[7] = new _tween2.default.Tween(this.Triangle8.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[8] = new _tween2.default.Tween(this.Triangle9.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[9] = new _tween2.default.Tween(this.Triangle10.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[10] = new _tween2.default.Tween(this.Triangle11.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[11] = new _tween2.default.Tween(this.Triangle12.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[12] = new _tween2.default.Tween(this.Triangle13.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[13] = new _tween2.default.Tween(this.Triangle14.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[14] = new _tween2.default.Tween(this.Triangle15.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[15] = new _tween2.default.Tween(this.Triangle16.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[16] = new _tween2.default.Tween(this.Triangle17.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[17] = new _tween2.default.Tween(this.Triangle18.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[18] = new _tween2.default.Tween(this.Triangle19.position).to({ y: -30 }, 5000).easing(_tween2.default.Easing.Linear.None);
+
+            apexDown[19] = new _tween2.default.Tween(this.Triangle56.position).to({ y: 0, x: 0 }, 8000).easing(_tween2.default.Easing.Linear.None);
+
+            apexExtend[0] = new _tween2.default.Tween(this.geometry8.vertices[2]).to({ x: -770 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexExtend[1] = new _tween2.default.Tween(this.geometry9.vertices[1]).to({ x: -770 }, 5000).easing(_tween2.default.Easing.Linear.None).start();
+
+            apexShrink[0] = new _tween2.default.Tween(this.geometry8.vertices[2]).to({ x: -830 }, 4000).easing(_tween2.default.Easing.Linear.None);
+
+            apexShrink[1] = new _tween2.default.Tween(this.geometry9.vertices[1]).to({ x: -830 }, 4000).easing(_tween2.default.Easing.Linear.None);
+
+            for (var i = 0; i <= 19; i++) {
+                apexUp[i].chain(apexDown[i]);
+                apexDown[i].chain(apexUp[i]);
+            }
+
+            for (var _i = 0; _i <= 1; _i++) {
+                apexExtend[_i].chain(apexShrink[_i]);
+                apexShrink[_i].chain(apexExtend[_i]);
+            }
+            // apexUp.chain(apexDown);
+            // apexDown.chain(apexUp);
+            this.animateFlg = true;
+        }
+    }, {
+        key: 'endAnimate',
+        value: function endAnimate() {
+            this.animateFlg = false;
         }
     }]);
 
-    return Smoke;
+    return Polygon;
 }();
 
-new Smoke();
+new Polygon();
 
 /***/ })
-],[77]);
+],[76]);
